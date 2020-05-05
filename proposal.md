@@ -1,9 +1,9 @@
 # Proposal
 
-# The Problem
+## The Problem
 
-# The Importance
+## The Importance
 
-# The Solution
+## The Solution
 
-# The Expected Results
+## The Expected Results
