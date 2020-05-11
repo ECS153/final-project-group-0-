@@ -1,5 +1,5 @@
 # Installation
-Would recommend creating a python virtual environment for the required modules that picasso needs.  
+Would recommend creating a python virtual environment for the required modules that Picasso needs. After you have a virtual environment, install the required modules from the requirements.txt, and then you can start Picasso
 
 ## Installing Virtual Environment
 1. Make sure you have python3 installed
