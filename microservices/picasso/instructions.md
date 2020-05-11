@@ -1,5 +1,5 @@
 # Installation
-Would recommend creating a python virtual environment for the required modules. 
+Would recommend creating a python virtual environment for the required modules that picasso needs.  
 
 ## Installing Virtual Environment
 1. Make sure you have python3 installed
@@ -10,7 +10,7 @@ Would recommend creating a python virtual environment for the required modules.
 ### Windows
 `py -m pip install --user virtualenv`
 
-## Activating venv
+## Activating Virtual Environment
 ### Mac/Linux
 1. go to this directory
 2. Command: `source env/bin/activate`
