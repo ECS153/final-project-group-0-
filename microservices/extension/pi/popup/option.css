@@ -1,0 +1,30 @@
+html, body {
+  width: 100px;
+}
+
+.hidden {
+  display: none;
+}
+
+.button {
+  margin: 3% auto;
+  text-align: center;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.enable:hover {
+  background-color: #CFF2F2;
+}
+
+.enable {
+  background-color: #E5F2F2;
+}
+
+.disable {
+  background-color: #FBFBC9;
+}
+
+.disable:hover {
+  background-color: #EAEA9D;
+}
