@@ -4,7 +4,12 @@ For everyone in the group include one sentence on each of these (1) what you did
 ## Milestone 1
 
 ### Martin
+#### Work Done
 As mentioned in the video, this week we didn't focus too much on actual coding, but rather researched potential frameworks/plugins that could help us acheive our idea. Nonetheless, this week I tested mitmproxy, a promising python proxy app, looked into setting up browser proxy rules to only use our pi as a proxy when required, researched npyscreen, a GUI framework that we are going to use, configured permissions for my vpn to allow Raza and Marty to have access to our raspberry pi, and started working on the GUI for the pi
-### Raza
+#### Future Work
+Since a proxy that parses incoming requests is going to be more demanding than what we had anticipated for our pi zero, I'm planning on either looking more into routing only certain requests through the pi, or just purchasing a more powerful version of the pi. I'm also going to keep working on the GUI, and work with everyone to come up our *final* final design overall. 
+#### Roadblocks
+Based on what I've found out thus far, because proxies are on a lower TCP/IP level than the requests themselves, there might not be an elegant and reliable way to switch proxies based on http request types/urls. I'm not sure if it's a good idea to continue to spend energy on this problem or just accept it and let all traffic always route through the pi
+
 ### Marty
 ### [Video](https://youtu.be/HAPT6BZmq78)
