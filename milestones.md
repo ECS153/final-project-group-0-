@@ -13,3 +13,6 @@ Based on what I've found out thus far, because proxies are on a lower TCP/IP lev
 
 ### Marty
 ### [Video](https://youtu.be/HAPT6BZmq78)
+
+### Raza
+I worked on the extension to see how easy it to manipualte the page content and send to our Pi. This week I plan on working with my mates in an attemt to finalize our approach as we have had to make several changes in the previous days. 
