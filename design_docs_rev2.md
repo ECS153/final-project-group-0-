@@ -1,7 +1,7 @@
 # Overall Implementation
 1. User enables the extension. The extension scans for all fields on a page and prompts the user to select the fields
 they want to input securely. Next, the extension inputs a randomly generated ID to the selected fields' value
-2. The exension informs our proxy server of the randomly generated ID's that it should be searching for
+2. The exension informs our server of the randomly generated ID's that it should be searching for
 3. The server receives the ID's, but before it tells the proxy to start scanning for them, it sends a request to the
 corresponding user's raspberry pi to confirm as well as the credentials (only partially revealed)that can be
     used on this site as well as the form ID.
