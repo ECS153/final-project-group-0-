@@ -9,48 +9,55 @@
   }
   window.hasRun = true;
 
-  function enable() {
-    var forms = document.forms;
-    var i;
-    var j;
-    for (i = 0; i < forms.length; i++) {
-      let form = forms[i];
-      
-      //redirect to app
-      form.action = "https://rightful-alpine-jelly.glitch.me/test";
+  var alreadyScanned;
 
-      let btns = form.querySelectorAll("input, select, button");
-      var fields = "[";
-      for (j = 0; j < btns.length; j++) {
-        //change submit button display text
-        if (btns[j].type == "submit"){
-          btns[j].innerHTML = "PI Login";
-          btns[j].value = "PI Login";
-        }
-        
-        if (btns[j].hasAttribute("name") && btns[j].type != "hidden"){
-          fields = fields + btns[j].name + ",";
-        }
-      }
+  function scan() {
+    if (alreadyScanned) {
+      return;
+		}
+    // get all password fields
+    var fields = document.querySelectorAll('input[type="password"]');
       
-      fields = fields + "]";
-      var input = document.createElement("input");
-      input.setAttribute("type", "hidden");
-      input.setAttribute("value", fields);
-      form.appendChild(input);
+    var i;
+    for (i = 0; i < fields.length; i++) {
+      // create checkbox for each field on page
+      var checkBox = document.createElement("input");
+      checkBox.setAttribute("type", "checkbox");
+      checkBox.addEventListener("change", fillOut);
+
+      fields[i].insertAdjacentElement("afterend", checkBox);
     }
   }
-  
-  // for now
-  function disable() {
-    location.reload();
+
+  function fillOut(e) {
+    var checkBox = e.target;
+    var input = checkBox.previousSibling;
+
+    if (checkBox.checked) {
+      input.value = "password";
+    } else {
+      input.value = "";
+		}
+	}
+    
+  function send() {
+    // create a JSON object
+    const data = {
+      "email": "eve.holt@reqres.in",
+      "password": "cityslicka"
+    };
+
+    var sending = browser.runtime.sendMessage({
+      json: JSON.stringify(data)
+    });
   }
 
   browser.runtime.onMessage.addListener((message) => {
-    if (message.command === "enable") {
-      enable();
-    } else if (message.command === "disable") {
-      disable();
+    if (message.command === "scan") {
+      scan();
+      alreadyScanned = true;
+    } else if (message.command === "send") {
+      send();
     }
   });
 

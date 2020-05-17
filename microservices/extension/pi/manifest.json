@@ -1,19 +1,21 @@
 {
 
-  "description": "redirects form submit to pi",
+  "description": "Sign in safely via pi/server",
   "manifest_version": 2,
   "name": "redirect",
   "version": "1.0",
   "icons": {
-    "48": "icons/off.png"
+    "96": "icons/pi.png"
   },
 
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "webRequest",
+    "<all_urls>"
   ],
 
   "browser_action": {
-    "default_icon": "icons/off.png",
+    "default_icon": "icons/pi.png",
     "default_title": "redirect",
     "default_popup": "popup/option.html"
   }
