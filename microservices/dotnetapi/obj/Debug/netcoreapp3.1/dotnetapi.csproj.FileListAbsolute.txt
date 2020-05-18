@@ -256,3 +256,12 @@
 /home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/obj/Debug/netcoreapp3.1/dotnetapi.dll
 /home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/obj/Debug/netcoreapp3.1/dotnetapi.pdb
 /home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/obj/Debug/netcoreapp3.1/dotnetapi.genruntimeconfig.cache
+/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/bin/Debug/netcoreapp3.1/AutoMapper.dll
+/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/bin/Debug/netcoreapp3.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/bin/Debug/netcoreapp3.1/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Logging.dll
+/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Protocols.dll
+/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/bin/Debug/netcoreapp3.1/Microsoft.IdentityModel.Tokens.dll
+/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/bin/Debug/netcoreapp3.1/System.IdentityModel.Tokens.Jwt.dll

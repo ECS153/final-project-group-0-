@@ -9,8 +9,8 @@ using dotnetapi.Entities;
 namespace dotnetapi.Migrations
 {
     [DbContext(typeof(ProxyReplaceContext))]
-    [Migration("20200517051926_secondCreate")]
-    partial class secondCreate
+    [Migration("20200517234748_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

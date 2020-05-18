@@ -1,4 +1,4 @@
-namespace dotnetapi.Models
+namespace dotnetapi.Entities
 {
     public class ProxyReplace
     {
