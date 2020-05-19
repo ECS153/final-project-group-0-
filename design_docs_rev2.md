@@ -1,7 +1,7 @@
 # Design Documents
 
 ## Overall Goal
-Our goal is to forward browser requests that require sensitive data to a raspberry pi. The pi will contain credentials that can be used to populate the request's required fields. Then, the pi will make the request to the destination server and send the response back to the browser
+Our goal is to create a password manager that can keep a user's credentials untouchable by any malware that is on the computer the credentials are submitted from, as well as from man in the middle attacks on the local network. We feel that we can guarantee this by having the browser send randomly generated tokens in place of credentials, and then substituting the real credentials at the latest possible moment possible, via a proxy that would act as a man in the middle between the user and the router. 
 
 # Overall Implementation
 1. User enables the extension. The extension scans for all fields on a page and prompts the user to select the fields
@@ -16,4 +16,21 @@ corresponding user's raspberry pi to confirm as well as the credentials (only pa
     - When the api receieves this request, it matches the partially hidden credentials to the full credentials, and adds them to a table in the database that our proxy is polling 
     - When the proxy receives a request, it will check amongst the table to see if it contains the token
 4. Now, when the user sends the form, it will be filled out by our proxy
+
+## Implementation
+Because of the current climate, our team will mostly work remotely. Because of this, we felt that the best way to develop a group project would be to use [microservices](https://youtu.be/y8OnoxKotPQ).
+
+## Microservices
+### MITM Proxy Add On [Design](https://docs.google.com/document/d/19DOHn-kxQCHsZ6j-u2Ykwr2dHSKq6gtWihOWBx5ISWU/edit?usp=sharing)
+Mitmproxy is an application we found that can act as a man in the middle between the router and the browser. It essentially reads every request that is sent, and then repackages it into a new request to send to its intended destination. Because of this, in constrast to most proxies, it can actually read https requests as well. In addition to all of the built in tools and commands that you can use to read and modify all requests, it also supports user created add ons. We created an add on that can connect to a database table that contains the tokens that our chrome extension generates, and change them with the real credentials.
+
+### Secret API [Design](https://docs.google.com/document/d/1CBh3EtYRP9pQcqUtRFken9FF3jxMfvshMlcplv2MuNk/edit?usp=sharing)
+Additionally, we have created an api that connects all of our microservices together. This api supports user verification and should be able to handle multiple user accounts. On top of managing CRUD operations for users and their credentials, it also communicates with both our browser extension as well as the raspberry pi. 
+
+### Picasso [Design](https://docs.google.com/document/d/1EFiQuFMGCKoSuqcNS2dWLJ9pPypdUNWfOIfw0M2BpQ0/edit?usp=sharing)
+This microservice will be responsible for communicating with our api and displaying all of the information it receives via a small e ink display. The user can also make selections based on this input via small buttons.  
+
+### Browser Extension [Design](https://docs.google.com/document/d/1Q587ps_vSrxBJO9yf6Wu1M1djfajAU3gDQRm8geztyY/edit usp=sharing)
+The browser extension will need to scan the current page the user is on for any text input fields. If they exist, it must create a random token that will pass any javascript pre-validation methods the page might contain (i.e. If it is a field prompting for an email address, the token must have an "@" sign as well as an email domain). It must then tell the proxy of the text to search for via our api.
+
  
