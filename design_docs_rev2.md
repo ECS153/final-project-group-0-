@@ -30,7 +30,7 @@ Additionally, we have created an api that connects all of our microservices toge
 ### Picasso [Design](https://docs.google.com/document/d/1EFiQuFMGCKoSuqcNS2dWLJ9pPypdUNWfOIfw0M2BpQ0/edit?usp=sharing)
 This microservice will be responsible for communicating with our api and displaying all of the information it receives via a small e ink display. The user can also make selections based on this input via small buttons.  
 
-### Browser Extension [Design](https://docs.google.com/document/d/1Q587ps_vSrxBJO9yf6Wu1M1djfajAU3gDQRm8geztyY/edit usp=sharing)
+### Browser Extension [Design](https://docs.google.com/document/d/1Q587ps_vSrxBJO9yf6Wu1M1djfajAU3gDQRm8geztyY/editusp=sharing)
 The browser extension will need to scan the current page the user is on for any text input fields. If they exist, it must create a random token that will pass any javascript pre-validation methods the page might contain (i.e. If it is a field prompting for an email address, the token must have an "@" sign as well as an email domain). It must then tell the proxy of the text to search for via our api.
 
  
