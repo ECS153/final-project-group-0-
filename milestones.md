@@ -4,7 +4,6 @@ For everyone in the group include one sentence on each of these (1) what you did
 ## Milestone 1
 
 ### Martin
-#### Work Done
 This week I tested mitmproxy, a promising python proxy app, looked into setting up browser proxy rules to only use our pi as a proxy when required, researched npyscreen, a GUI framework that we are going to use, configured permissions for my vpn to allow Raza and Marty to have access to our raspberry pi, and started working on the GUI for the pi. I'm also going to keep working on the GUI, and work with everyone to come up our *final* final design overall. 
 
 ### Marty
@@ -16,10 +15,9 @@ I worked on the extension to see how easy it to manipulate the page content and 
 
 ### [Video](https://youtu.be/HAPT6BZmq78)
 
-## Milestone 1
+## Milestone 2
 
 ### Martin
 I started creating the api that connects together our chrome extension with mitm proxy as well as our raspberry pi, and created the design doc for it. By the end of the week I'm planning on finishing the api as well as to start looking into the raspberry pi's gui again. 
-[Design Doc] (https://docs.google.com/document/d/1CBh3EtYRP9pQcqUtRFken9FF3jxMfvshMlcplv2MuNk/edit)
+[Design Doc](https://docs.google.com/document/d/1CBh3EtYRP9pQcqUtRFken9FF3jxMfvshMlcplv2MuNk/edit)
 
-#### Work Done
