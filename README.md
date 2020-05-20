@@ -1,4 +1,4 @@
-# final-project-group-0-
+# SECRET- A Secure Credential Transportor
 
 ## Collaborators
 Martin Petrov
