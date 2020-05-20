@@ -18,6 +18,5 @@ I worked on the extension to see how easy it to manipulate the page content and 
 ## Milestone 2
 
 ### Martin
-I started creating the api that connects together our chrome extension with mitm proxy as well as our raspberry pi, and created the design doc for it. By the end of the week I'm planning on finishing the api as well as to start looking into the raspberry pi's gui again. 
-[Design Doc](https://docs.google.com/document/d/1CBh3EtYRP9pQcqUtRFken9FF3jxMfvshMlcplv2MuNk/edit)
+I started creating the api that connects together our chrome extension with mitm proxy as well as our raspberry pi, and created the [design doc](https://docs.google.com/document/d/1CBh3EtYRP9pQcqUtRFken9FF3jxMfvshMlcplv2MuNk/edit) for it. By the end of the week I'm planning on finishing the api as well as to start looking into the raspberry pi's gui again. 
 
