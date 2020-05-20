@@ -21,10 +21,12 @@ I worked on the extension to see how easy it to manipulate the page content and 
 I started creating the api that connects together our chrome extension with mitm proxy as well as our raspberry pi, and created the [design doc](https://docs.google.com/document/d/1CBh3EtYRP9pQcqUtRFken9FF3jxMfvshMlcplv2MuNk/edit) for it. By the end of the week I'm planning on finishing the api as well as to start looking into the raspberry pi's gui again. 
 
 ### Raza
-I worked on the [extension](https://github.com/ECS153/final-project-group-0-/commit/d5a32c046e67c1637a6de2346060a770e93fa3a3) and it is mainly finished however I discovered another way (using contextmenus) to do what we needed and it seems more universal and less intrusive so I have started on thatt.
+I worked on the [extension](https://github.com/ECS153/final-project-group-0-/commit/d5a32c046e67c1637a6de2346060a770e93fa3a3) and it is mainly finished however I discovered another way (using contextmenus) to do what we needed and it seems more universal and less intrusive so I have started on that.
 I also got the basic [proxy](https://github.com/ECS153/final-project-group-0-/commit/c8f9eebb451ced5f01b1f91816d89876ea505664) working. It can connect to our sql database and get the user's credentials and replace them in the requests that come through.
 
-
+### Marty
+I mainly tested some of the viable sites that could be used for the extension that would generate the forms to submit to the server
+and looked into some of the viable hardware that could be used for the LCD screen with the raspberry pi. Will be looking into creating documentation for some of the user manuals in building the project.
 
 
 
