@@ -15,3 +15,11 @@ This week I plan to continue working on the extension to handle the requests mad
 I worked on the extension to see how easy it to manipulate the page content and send to our Pi. This week I plan on working with my mates in an attempt to finalize our approach as we have had to make several changes in the previous days. 
 
 ### [Video](https://youtu.be/HAPT6BZmq78)
+
+## Milestone 1
+
+### Martin
+I started creating the api that connects together our chrome extension with mitm proxy as well as our raspberry pi, and created the design doc for it. By the end of the week I'm planning on finishing the api as well as to start looking into the raspberry pi's gui again. 
+[Design Doc] (https://docs.google.com/document/d/1CBh3EtYRP9pQcqUtRFken9FF3jxMfvshMlcplv2MuNk/edit)
+
+#### Work Done
