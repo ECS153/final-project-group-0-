@@ -1,23 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.ComponentModel.DataAnnotations;
 
 namespace dotnetapi.Entities
 {
-    public class User
+    public class Credential
     {
+        [Required]
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Username { get; set; }
-        public string Role { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        [Required]
+        public string 
+
     }
 
-    public class UserContext : DbContext
+    public class CredentialContext : DbContext
     {
         protected readonly IConfiguration _Configuration;
-        public UserContext(IConfiguration configuration)
+        public CredentialContext(IConfiguration configuration)
         {
             _Configuration = configuration;
         }
@@ -26,6 +25,6 @@ namespace dotnetapi.Entities
             // connect to sql server database
             options.UseSqlServer(_Configuration.GetConnectionString("DefaultConnection"));
         }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Credential> Credentials { get; set; }
     }
 }

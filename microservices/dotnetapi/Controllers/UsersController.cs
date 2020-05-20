@@ -13,18 +13,18 @@ using dotnetapi.Entities;
 using dotnetapi.Models.Users;
 using dotnetapi.Helpers;
 
-namespace WebApi.Controllers
+namespace dotnetapi.Controllers
 {
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private IUserService _userService;
         private IMapper _mapper;
         private readonly AppSettings _AppSettings;
 
-        public UsersController(IUserService userService, IMapper mapper, IOptions<AppSettings> appSettings)
+        public UserController(IUserService userService, IMapper mapper, IOptions<AppSettings> appSettings)
         {
             _userService = userService;
             _mapper = mapper;
@@ -75,41 +75,11 @@ namespace WebApi.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpPost("registerAdmin")]
-        public IActionResult RegisterAdmin([FromBody]RegisterModel model)
+        [HttpGet("")]
+        public IActionResult GetById()
         {
-            var user = _mapper.Map<User>(model);
-            try
-            {
-                user.Role = "Admin";
-                _userService.Create(user, model.Password);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var users = _userService.GetAll();
-            return Ok(users);
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            // only allow admins to access other user records
             var currentUserId = int.Parse(User.Identity.Name);
-            
-            if (id != currentUserId && !User.IsInRole("Admin"))
-                return Forbid();
-
-            var user =  _userService.GetById(id);
+            var user =  _userService.GetById(currentUserId);
             
             if (user == null)
                 return NotFound();
@@ -118,16 +88,13 @@ namespace WebApi.Controllers
             return Ok(model);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UpdateModel model)
+        [HttpPut("")]
+        public IActionResult Update([FromBody]UpdateModel model)
         {
-            // only allow admins to access other user records
             var currentUserId = int.Parse(User.Identity.Name);
-            if (id != currentUserId && !User.IsInRole("Admin"))
-                return Forbid();
-
-            var user = _mapper.Map<User>(model);
-            user.Id = id;
+           
+            var user = _mapper.Map<User>(currentUserId);
+            user.Id = currentUserId;
 
             try {
                 _userService.Update(user, model.Password);
@@ -136,18 +103,6 @@ namespace WebApi.Controllers
             catch (AppException ex) {
                 return BadRequest(new { message = ex.Message });
             }
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            // only allow admins to access other user records
-            var currentUserId = int.Parse(User.Identity.Name);
-            if (id != currentUserId && !User.IsInRole("Admin"))
-                return Forbid();
-
-            _userService.Delete(id);
-            return Ok();
         }
     }
 }

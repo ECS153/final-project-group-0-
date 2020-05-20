@@ -8,7 +8,7 @@ using dotnetapi.Entities;
 
 namespace dotnetapi.Migrations
 {
-    [DbContext(typeof(ProxyReplaceContext))]
+    [DbContext(typeof(ProxySwapContext))]
     [Migration("20200517234748_Initial")]
     partial class Initial
     {

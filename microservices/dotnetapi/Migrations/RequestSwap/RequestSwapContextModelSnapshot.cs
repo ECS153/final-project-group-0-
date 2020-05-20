@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnetapi.Entities;
 
-namespace dotnetapi.Migrations
+namespace dotnetapi.Migrations.RequestSwap
 {
-    [DbContext(typeof(ProxySwapContext))]
-    partial class ProxyReplaceContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(RequestSwapContext))]
+    partial class RequestSwapContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -18,20 +18,19 @@ namespace dotnetapi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("dotnetapi.Entities.ProxySwap", b =>
+            modelBuilder.Entity("dotnetapi.Entities.RequestSwap", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Credential")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Domain")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FieldId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Ip")
                         .IsRequired()
@@ -41,9 +40,13 @@ namespace dotnetapi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ProxySwaps");
+                    b.ToTable("RequestSwaps");
                 });
 #pragma warning restore 612, 618
         }
