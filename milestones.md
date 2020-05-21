@@ -28,5 +28,5 @@ I also got the basic [proxy](https://github.com/ECS153/final-project-group-0-/co
 I mainly tested some of the viable sites that could be used for the extension that would generate the forms to submit to the server
 and looked into some of the viable hardware that could be used for the LCD screen with the raspberry pi. Will be looking into creating documentation for some of the user manuals in building the project.
 
-
+### [Video](https://www.youtube.com/watch?v=9Hz0tNPrG1A&feature=youtu.be)
 
