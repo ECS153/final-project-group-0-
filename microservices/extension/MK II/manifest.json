@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "SeCreT",
+  "description": "generate fake info",
+  "version": "1.0",
+
+  "permissions": [
+    "activeTab",
+    "menus",
+    "<all_urls>"
+  ],
+
+  "content_scripts": [
+    {
+      "all_frames": true,
+      "matches": [ "<all_urls>" ],
+      "js": [ "script.js" ]
+    }
+  ],
+
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  }
+}
