@@ -9,7 +9,6 @@ namespace dotnetapi.Entities
         [Required]
         public int Id { get; set; }
         [Required]
-        
         public string Ip { get; set; }
         [Required]
         public string Domain { get; set; }

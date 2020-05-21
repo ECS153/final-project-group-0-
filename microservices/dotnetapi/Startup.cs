@@ -31,6 +31,7 @@ namespace dotnetapi
             services.AddDbContext<UserContext>();
             services.AddDbContext<ProxySwapContext>();
             services.AddDbContext<RequestSwapContext>();
+          
 
             services.AddCors();
             services.AddControllers();
@@ -78,6 +79,7 @@ namespace dotnetapi
             // These classes will receive a new instance of themselves on each new request
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBrowserService, BrowserService>();
+            services.AddScoped<ICredentialService, CredentialService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

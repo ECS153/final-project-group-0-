@@ -4,27 +4,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace dotnetapi.Entities
 {
-    public class Credential
+    enum CredentialType 
     {
-        [Required]
-        public int Id { get; set; }
-        [Required]
-        public string 
-
+        Password,
+        CreditCard,
+        Username,
+        Email
     }
 
-    public class CredentialContext : DbContext
+    public class Credential
     {
-        protected readonly IConfiguration _Configuration;
-        public CredentialContext(IConfiguration configuration)
-        {
-            _Configuration = configuration;
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            // connect to sql server database
-            options.UseSqlServer(_Configuration.GetConnectionString("DefaultConnection"));
-        }
-        public DbSet<Credential> Credentials { get; set; }
+        public int Id { get; set; }
+        public int? Type { get; set; }
+        public string Hint { get; set; }
+        public string ValueHash { get; set; }
+        public string Domain { get; set; }
     }
 }

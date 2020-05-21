@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
+using System.Collections.Generic;
 namespace dotnetapi.Entities
 {
     public class User
     {
+        
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -12,6 +13,8 @@ namespace dotnetapi.Entities
         public string Role { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+        public ICollection<Credential> Credentials { get; set; }
+        
     }
 
     public class UserContext : DbContext

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnetapi.Entities;
 
 namespace dotnetapi.Migrations.Data
 {
     [DbContext(typeof(UserContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200521041927_AddCredentialsV4")]
+    partial class AddCredentialsV4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,24 +28,24 @@ namespace dotnetapi.Migrations.Data
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Domain")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Hint")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
+                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<string>("ValueHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("domain")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("userId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("userId");
 
                     b.ToTable("Credential");
                 });
@@ -80,9 +82,9 @@ namespace dotnetapi.Migrations.Data
 
             modelBuilder.Entity("dotnetapi.Entities.Credential", b =>
                 {
-                    b.HasOne("dotnetapi.Entities.User", null)
+                    b.HasOne("dotnetapi.Entities.User", "user")
                         .WithMany("Credentials")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("userId");
                 });
 #pragma warning restore 612, 618
         }
