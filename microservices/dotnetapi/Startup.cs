@@ -28,10 +28,7 @@ namespace dotnetapi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UserContext>();
-            services.AddDbContext<ProxySwapContext>();
-            services.AddDbContext<RequestSwapContext>();
-          
+            services.AddDbContext<DatabaseContext>();
 
             services.AddCors();
             services.AddControllers();
@@ -78,15 +75,15 @@ namespace dotnetapi
             });
             // These classes will receive a new instance of themselves on each new request
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IBrowserService, BrowserService>();
+            services.AddScoped<IRequestSwapService, RequestSwapService>();
             services.AddScoped<ICredentialService, CredentialService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserContext userContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext Context)
         {
             // migrate any database changes on startup
-            userContext.Database.Migrate();
+            Context.Database.Migrate();
 
             app.UseRouting();
 

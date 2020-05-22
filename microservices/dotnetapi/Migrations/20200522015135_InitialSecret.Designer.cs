@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnetapi.Entities;
 
-namespace dotnetapi.Migrations.Data
+namespace dotnetapi.Migrations
 {
-    [DbContext(typeof(UserContext))]
-    [Migration("20200521090235_NullableType")]
-    partial class NullableType
+    [DbContext(typeof(DatabaseContext))]
+    [Migration("20200522015135_InitialSecret")]
+    partial class InitialSecret
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,66 @@ namespace dotnetapi.Migrations.Data
                     b.ToTable("Credential");
                 });
 
+            modelBuilder.Entity("dotnetapi.Entities.ProxySwap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Credential")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ip")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RandToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestSwaps");
+                });
+
+            modelBuilder.Entity("dotnetapi.Entities.RequestSwap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Domain")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FieldId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ip")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RandToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestSwap");
+                });
+
             modelBuilder.Entity("dotnetapi.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -84,6 +144,13 @@ namespace dotnetapi.Migrations.Data
                 {
                     b.HasOne("dotnetapi.Entities.User", null)
                         .WithMany("Credentials")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("dotnetapi.Entities.RequestSwap", b =>
+                {
+                    b.HasOne("dotnetapi.Entities.User", null)
+                        .WithMany("RequestSwaps")
                         .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618

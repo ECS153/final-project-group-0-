@@ -21,21 +21,19 @@ namespace dotnetapi.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _userService;
-        private IMapper _mapper;
         private readonly AppSettings _AppSettings;
 
-        public UserController(IUserService userService, IMapper mapper, IOptions<AppSettings> appSettings)
+        public UserController(IUserService userService, IOptions<AppSettings> appSettings)
         {
             _userService = userService;
-            _mapper = mapper;
             _AppSettings = appSettings.Value;
         }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]AuthenticateModel model)
+        public IActionResult Authenticate([FromBody]UserAuthenticateModel model)
         {
-            var user = _userService.Authenticate(model.Username, model.Password);
+            var user = _userService.Authenticate(model);
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
@@ -60,13 +58,11 @@ namespace dotnetapi.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register([FromBody]RegisterModel model)
+        public IActionResult Register([FromBody]UserCreateModel model)
         {
-            var user = _mapper.Map<User>(model);
             try
             {
-                user.Role = "User";
-                _userService.Create(user, model.Password);
+                _userService.Create(model, "User");
                 return Ok();
             }
             catch (AppException ex)
@@ -76,28 +72,23 @@ namespace dotnetapi.Controllers
         }
 
         [HttpGet("")]
-        public IActionResult GetById()
+        public IActionResult Read()
         {
             var currentUserId = int.Parse(User.Identity.Name);
-            var user =  _userService.GetById(currentUserId);
-            
+            var user =  _userService.GetById(currentUserId);            
             if (user == null)
                 return NotFound();
-            var model = _mapper.Map<ViewModel>(user);
 
-            return Ok(model);
+            return Ok(user);
         }
 
         [HttpPut("")]
-        public IActionResult Update([FromBody]UpdateModel model)
-        {
-            var currentUserId = int.Parse(User.Identity.Name);
-           
-            var user = _mapper.Map<User>(currentUserId);
-            user.Id = currentUserId;
+        public IActionResult Update([FromBody]UserUpdateModel model)
+        {   
+            model.Id = int.Parse(User.Identity.Name);
 
             try {
-                _userService.Update(user, model.Password);
+                _userService.Update(model);
                 return Ok();
             }
             catch (AppException ex) {

@@ -1,30 +1,36 @@
+using AutoMapper;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using dotnetapi.Entities;
-using dotnetapi.Models.Browsers;
+using dotnetapi.Models.RequestModels;
 using dotnetapi.Services;
 
 namespace dotnetapi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class BrowserController : ControllerBase
     {
-        private IBrowserService BrowserService;
-        public BrowserController(IBrowserService service)
+        private IRequestSwapService _service;
+        private IMapper _mapper;
+        public BrowserController(IRequestSwapService service, IMapper mapper)
         {
-            BrowserService = service;
+            _service = service;
+            _mapper = mapper;
         }
   
         [HttpPost]
-        public IActionResult Index ([FromBody] RequestSwap ReqSwap)
+        public IActionResult Index ([FromBody] BrowserRequestSwapModel model)
         {
-            BrowserService.Create(ReqSwap);
-            
-            
+            var ReqSwap = _mapper.Map<RequestSwap>(model);
+            ReqSwap.Ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            ReqSwap.UserId = int.Parse(User.Identity.Name); 
+  
+            _service.Create(ReqSwap);
             
             return Ok();
         }

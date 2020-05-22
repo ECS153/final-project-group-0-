@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnetapi.Entities;
 
-namespace dotnetapi.Migrations.Data
+namespace dotnetapi.Migrations
 {
-    [DbContext(typeof(UserContext))]
-    [Migration("20200521011504_AddCredentialsV2")]
-    partial class AddCredentialsV2
+    [DbContext(typeof(DatabaseContext))]
+    partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,10 +26,13 @@ namespace dotnetapi.Migrations.Data
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Domain")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Hint")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Type")
+                    b.Property<int?>("Type")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
@@ -40,14 +41,71 @@ namespace dotnetapi.Migrations.Data
                     b.Property<string>("ValueHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("domain")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Credential");
+                });
+
+            modelBuilder.Entity("dotnetapi.Entities.ProxySwap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Credential")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ip")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RandToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestSwaps");
+                });
+
+            modelBuilder.Entity("dotnetapi.Entities.RequestSwap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Domain")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FieldId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ip")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RandToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestSwap");
                 });
 
             modelBuilder.Entity("dotnetapi.Entities.User", b =>
@@ -84,6 +142,13 @@ namespace dotnetapi.Migrations.Data
                 {
                     b.HasOne("dotnetapi.Entities.User", null)
                         .WithMany("Credentials")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("dotnetapi.Entities.RequestSwap", b =>
+                {
+                    b.HasOne("dotnetapi.Entities.User", null)
+                        .WithMany("RequestSwaps")
                         .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618

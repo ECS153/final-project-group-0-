@@ -17,18 +17,5 @@ namespace dotnetapi.Entities
         [Required]
         public string Credential {get; set; }
     }
-
-    public class ProxySwapContext : DbContext
-    {
-        protected readonly IConfiguration Configuration;
-        public ProxySwapContext(IConfiguration configuration) {
-        Configuration = configuration;
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder opts) {
-                        Console.Write("hello");
-        opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-        }
-        public DbSet<ProxySwap> ProxySwaps { get; set; }
-    }
 }
 

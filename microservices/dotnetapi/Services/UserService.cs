@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -5,37 +6,39 @@ using System.Linq;
 
 using dotnetapi.Entities;
 using dotnetapi.Helpers;
-
+using dotnetapi.Models.Users;
 namespace dotnetapi.Services
 {
     public interface IUserService
     {
-        User Authenticate(string username, string password);
+        User Authenticate(UserAuthenticateModel model);
         IEnumerable<User> GetAll();
-        User GetById(int id);
-        User Create(User user, string password);
-        void Update(User user, string password = null);
+        UserReadModel GetById(int id);
+        UserReadModel Create(UserCreateModel model, string Role);
+        void Update(UserUpdateModel model);
         void Delete(int id);
     }
 
     public class UserService : IUserService
     {
-        private UserContext _UserContext;
+        private DatabaseContext _context;
+        private IMapper _mapper;
         private readonly AppSettings _AppSettings;
 
-        public UserService(UserContext UserContext, IOptions<AppSettings> AppSettings)
+        public UserService(DatabaseContext Context, IMapper mapper, IOptions<AppSettings> AppSettings)
         {
-            _UserContext = UserContext;
+            _context = Context;
+            _mapper = mapper;
             _AppSettings = AppSettings.Value;
         }
 
-        public User Authenticate(string username, string password)
+        public User Authenticate(UserAuthenticateModel model)
         {
-            var user = _UserContext.Users.SingleOrDefault(x => x.Username == username);   
+            var user = _context.Users.SingleOrDefault(x => x.Username == model.Username);   
             if (user == null)
                 return null;
             // check if password is correct
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPasswordHash(model.Password, user.PasswordHash, user.PasswordSalt))
                 return null;
 
             return user;
@@ -43,80 +46,79 @@ namespace dotnetapi.Services
 
         public IEnumerable<User> GetAll()
         {
-            return _UserContext.Users;
+            return _context.Users;
         }
 
-        public User GetById(int id)
+        public UserReadModel GetById(int id)
         {
-            return _UserContext.Users.Find(id);
+            return _mapper.Map<UserReadModel>(_context.Users.Find(id));
         }
 
-        public User Create(User user, string password)
+        public UserReadModel Create(UserCreateModel model, string Role)
         {
-            // validation
-            if (string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(model.Password))
                 throw new AppException("Password is required");
 
-            if (_UserContext.Users.Any(x => x.Username == user.Username))
-                throw new AppException("Username \"" + user.Username + "\" is already taken");
+            if (_context.Users.Any(x => x.Username == model.Username))
+                throw new AppException("Username \"" + model.Username + "\" is already taken");
 
+            var user = _mapper.Map<User>(model);
             byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
+            CreatePasswordHash(model.Password, out passwordHash, out passwordSalt);
+            user.Role = Role;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            _UserContext.Users.Add(user);
-            _UserContext.SaveChanges();
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
-            return user;
+            return _mapper.Map<UserReadModel>(user);
         }
 
-        public void Update(User userParam, string password = null)
+        public void Update(UserUpdateModel model)
         {
-            var user = _UserContext.Users.Find(userParam.Id);
+            var user = _context.Users.Find(model.Id);
 
             if (user == null)
                 throw new AppException("User not found");
 
             // update username if it has changed
-            if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
+            if (!string.IsNullOrWhiteSpace(model.Username) && model.Username != user.Username)
             {
                 // throw error if the new username is already taken
-                if (_UserContext.Users.Any(x => x.Username == userParam.Username))
-                    throw new AppException("Username " + userParam.Username + " is already taken");
+                if (_context.Users.Any(x => x.Username == model.Username))
+                    throw new AppException("Username " + model.Username + " is already taken");
 
-                user.Username = userParam.Username;
+                user.Username = model.Username;
             }
 
             // update user properties if provided
-            if (!string.IsNullOrWhiteSpace(userParam.FirstName))
-                user.FirstName = userParam.FirstName;
+            if (!string.IsNullOrWhiteSpace(model.FirstName))
+                user.FirstName = model.FirstName;
 
-            if (!string.IsNullOrWhiteSpace(userParam.LastName))
-                user.LastName = userParam.LastName;
+            if (!string.IsNullOrWhiteSpace(model.LastName))
+                user.LastName = model.LastName;
 
             // update password if provided
-            if (!string.IsNullOrWhiteSpace(password))
+            if (!string.IsNullOrWhiteSpace(model.Password))
             {
                 byte[] passwordHash, passwordSalt;
-                CreatePasswordHash(password, out passwordHash, out passwordSalt);
+                CreatePasswordHash(model.Password, out passwordHash, out passwordSalt);
 
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
             }
-
-            _UserContext.Users.Update(user);
-            _UserContext.SaveChanges();
+            _context.Users.Update(user);
+            _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            var user = _UserContext.Users.Find(id);
+            var user = _context.Users.Find(id);
             if (user != null)
             {
-                _UserContext.Users.Remove(user);
-                _UserContext.SaveChanges();
+                _context.Users.Remove(user);
+                _context.SaveChanges();
             }
         }
 

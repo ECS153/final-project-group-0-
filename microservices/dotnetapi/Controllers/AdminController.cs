@@ -21,24 +21,20 @@ namespace WebApi.Controllers
     public class AdminController : ControllerBase
     {
         private IUserService _userService;
-        private IMapper _mapper;
         private readonly AppSettings _AppSettings;
 
-        public AdminController(IUserService userService, IMapper mapper, IOptions<AppSettings> appSettings)
+        public AdminController(IUserService userService, IOptions<AppSettings> appSettings)
         {
             _userService = userService;
-            _mapper = mapper;
             _AppSettings = appSettings.Value;
         }
 
         [HttpPost("registerAdmin")]
-        public IActionResult RegisterAdmin([FromBody]RegisterModel model)
+        public IActionResult RegisterAdmin([FromBody]UserCreateModel model)
         {
-            var user = _mapper.Map<User>(model);
             try
             {
-                user.Role = "Admin";
-                _userService.Create(user, model.Password);
+                _userService.Create(model, "Admin");
                 return Ok();
             }
             catch (AppException ex)
@@ -58,20 +54,18 @@ namespace WebApi.Controllers
         public IActionResult GetById(int id)
         {
             var user =  _userService.GetById(id);
-            if (user == null)
+            if (user == null) {
                 return NotFound();
-            var model = _mapper.Map<ViewModel>(user);
-
-            return Ok(model);
+            }
+            return Ok(user);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UpdateModel model)
+        public IActionResult Update(int id, [FromBody]UserUpdateModel model)
         {
-            var user = _mapper.Map<User>(model);
-            user.Id = id;
+            model.Id = id;
             try {
-                _userService.Update(user, model.Password);
+                _userService.Update(model);
                 return Ok();
             }
             catch (AppException ex) {

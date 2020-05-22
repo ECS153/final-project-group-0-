@@ -1,21 +1,11 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 
-using dotnetapi.Services;
-using dotnetapi.Entities;
-using dotnetapi.Models.Users;
 using dotnetapi.Helpers;
-
 using dotnetapi.Models.Credentials;
-
+using dotnetapi.Services;
 
 namespace dotnetapi.Controllers 
 {
@@ -25,15 +15,13 @@ namespace dotnetapi.Controllers
     public class CredentialController : ControllerBase
     {
         private ICredentialService _service;
-        private IMapper _mapper;
-        public CredentialController(ICredentialService service, IMapper mapper)
+        public CredentialController(ICredentialService service)
         {
             _service = service;
-            _mapper = mapper;
         }
         
         [HttpPost("new")]
-        public IActionResult Register(CredentialCreateModel model) 
+        public IActionResult Create(CredentialCreateModel model) 
         {
             int userId = int.Parse(User.Identity.Name);             
 
@@ -49,9 +37,8 @@ namespace dotnetapi.Controllers
         [HttpGet]
         public IActionResult Read(CredentialReadModel model)
         {
-            int userId = int.Parse(User.Identity.Name);
-            
-            List<Credential> credentials = _service.Read(model, userId);
+            int userId = int.Parse(User.Identity.Name); 
+            List<CredentialReadModel> credentials = _service.Read(model, userId);
             
             return Ok(credentials);
         }

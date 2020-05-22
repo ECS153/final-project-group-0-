@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace dotnetapi.Models.Users
 {
-    public class AuthenticateModel
+    public class UserAuthenticateModel
     {
         [Required]
         public string Username { get; set; }
@@ -10,7 +10,7 @@ namespace dotnetapi.Models.Users
         public string Password { get; set; }
     }
 
-    public class RegisterModel
+    public class UserCreateModel
     {
         [Required]
         public string FirstName { get; set; }
@@ -21,19 +21,22 @@ namespace dotnetapi.Models.Users
         [Required]
         public string Password { get; set; }
     }
-    public class UpdateModel
+    public class UserReadModel
     {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Username { get; set; }
+        public string Role { get; set; }
+    }
+    public class UserUpdateModel
+    {
+        public int? Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
     }
-    public class ViewModel
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Username { get; set; }
-    }
+
 
 
 }
