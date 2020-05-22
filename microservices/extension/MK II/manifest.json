@@ -5,17 +5,10 @@
   "version": "1.0",
 
   "permissions": [
+    "webRequest",
     "activeTab",
     "menus",
     "<all_urls>"
-  ],
-
-  "content_scripts": [
-    {
-      "all_frames": true,
-      "matches": [ "<all_urls>" ],
-      "js": [ "script.js" ]
-    }
   ],
 
   "background": {
