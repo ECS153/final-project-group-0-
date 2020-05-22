@@ -1,16 +1,12 @@
 using AutoMapper;
-using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+
 using dotnetapi.Entities;
 using dotnetapi.Helpers;
 using dotnetapi.Models.Credentials;
-
-
-using dotnetapi.Models.Users;
-
 
 namespace dotnetapi.Services
 {
@@ -27,7 +23,7 @@ namespace dotnetapi.Services
         private DatabaseContext _context;
         private IMapper _mapper;
 
-        public CredentialService(DatabaseContext context, IMapper mapper) 
+        public CredentialService(DatabaseContext context, IMapper mapper)
         {
             _mapper = mapper;
             _context = context;
@@ -61,7 +57,6 @@ namespace dotnetapi.Services
         {
             var user = _context.Users.Include(x => x.Credentials).First(u => u.Id == userId);
             try {
-
                 var credential = user.Credentials.First(x => x.Id == model.Id);
 
                 if (model.Domain != null) {
@@ -75,7 +70,6 @@ namespace dotnetapi.Services
                 }
                 _context.Users.Update(user);
                 _context.SaveChanges();
-
             } catch (InvalidOperationException){
                 throw new AppException("None of your credentials have this Id");
             }

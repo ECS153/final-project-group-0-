@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -31,6 +32,7 @@ namespace dotnetapi
             services.AddDbContext<DatabaseContext>();
             services.AddMvcCore().AddDataAnnotations();
             services.AddCors();
+
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -73,6 +75,12 @@ namespace dotnetapi
                     ValidateAudience = false
                 };
             });
+            
+            services.AddHttpsRedirection(opts => {
+                opts.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+                opts.HttpsPort = 443;
+            });
+
             // These classes will receive a new instance of themselves on each new request
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISwapService, SwapService>();
@@ -93,6 +101,7 @@ namespace dotnetapi
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
+            app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 

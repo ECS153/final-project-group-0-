@@ -21,11 +21,11 @@ namespace dotnetapi.Controllers
     [Route("[controller]")]
     public class PiController : ControllerBase
     {
-        private ISwapService _service;
+        private ISwapService _swapService;
         private IMapper _mapper;
         public PiController(ISwapService service, IMapper mapper)
         {
-            _service = service;
+            _swapService = service;
             _mapper = mapper;
         }
   
@@ -33,28 +33,21 @@ namespace dotnetapi.Controllers
         public IActionResult Index ()
         {
             var userId = int.Parse(User.Identity.Name);
-            var reqSwap = _service.GetTop(userId);
-            return Ok(_mapper.Map<RequestSwapModel>(reqSwap));
+            var reqSwap = _swapService.GetTop(userId);
+            
+            return Ok(_mapper.Map<PiRequestSwapModel>(reqSwap));
         }
         [HttpPost]
-        public IActionResult Submit([FromBody]SubmitSwapModel model)
+        public IActionResult Submit([FromBody]PiSubmitSwapModel model)
         {
-            if (ModelState.IsValid) {
             try {
-                if (ModelState.IsValid)
-                    Console.Write("hello: " + model.CredentialId);
-               var userId = int.Parse(User.Identity.Name);
-            _service.Swap(model, userId);
+                var userId = int.Parse(User.Identity.Name);
+                _swapService.Swap(model, userId);
                 return Ok();
             }
             catch (AppException ex) {
                 return BadRequest(new { message = ex.Message });
             }
-            }
-            return BadRequest(ModelState);
-            
-            
         }
-
     }
 }

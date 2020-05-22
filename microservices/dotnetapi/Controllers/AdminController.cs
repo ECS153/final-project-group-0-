@@ -1,17 +1,10 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 
-using dotnetapi.Services;
-using dotnetapi.Entities;
 using dotnetapi.Models.Users;
 using dotnetapi.Helpers;
+using dotnetapi.Services;
 
 namespace WebApi.Controllers
 {
@@ -29,7 +22,7 @@ namespace WebApi.Controllers
             _AppSettings = appSettings.Value;
         }
 
-        [HttpPost("registerAdmin")]
+        [HttpPost("register")]
         public IActionResult RegisterAdmin([FromBody]UserCreateModel model)
         {
             try

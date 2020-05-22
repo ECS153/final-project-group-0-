@@ -24,7 +24,6 @@ namespace dotnetapi.Controllers
         public IActionResult Create([FromBody]CredentialCreateModel model) 
         {
             int userId = int.Parse(User.Identity.Name);             
-
             try {
                 _service.Create(model, userId);
                 return Ok();

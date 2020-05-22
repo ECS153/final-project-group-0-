@@ -7,6 +7,7 @@ using System.Linq;
 using dotnetapi.Entities;
 using dotnetapi.Helpers;
 using dotnetapi.Models.Users;
+
 namespace dotnetapi.Services
 {
     public interface IUserService
@@ -23,13 +24,13 @@ namespace dotnetapi.Services
     {
         private DatabaseContext _context;
         private IMapper _mapper;
-        private readonly AppSettings _AppSettings;
+        private readonly AppSettings _appSettings;
 
-        public UserService(DatabaseContext Context, IMapper mapper, IOptions<AppSettings> AppSettings)
+        public UserService(DatabaseContext context, IMapper mapper, IOptions<AppSettings> appSettings)
         {
-            _context = Context;
+            _context = context;
             _mapper = mapper;
-            _AppSettings = AppSettings.Value;
+            _appSettings = appSettings.Value;
         }
 
         public User Authenticate(UserAuthenticateModel model)
@@ -149,7 +150,6 @@ namespace dotnetapi.Services
                     if (computedHash[i] != storedHash[i]) return false;
                 }
             }
-
             return true;
         }
     }

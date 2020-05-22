@@ -12,19 +12,19 @@ namespace dotnetapi.Helpers
     {
         public AutoMapperProfile()
         {
+            // User Model Maps
             CreateMap<UserCreateModel, User>();
             CreateMap<UserUpdateModel, User>();
             CreateMap<User, UserReadModel>();
 
+            // Credential Model Maps
             CreateMap<CredentialCreateModel, Credential>();
             CreateMap<CredentialUpdateModel, Credential>();
             CreateMap<Credential, CredentialReadModel>();
 
-            CreateMap<BrowserRequestSwapModel, RequestSwap>();
-
-            CreateMap<RequestSwap, RequestSwapModel>();
-
- 
+            // Swap Maps
+            CreateMap<BrowserSubmitRequestModel, RequestSwap>();
+            CreateMap<RequestSwap, PiRequestSwapModel>();
         }
     }
 }

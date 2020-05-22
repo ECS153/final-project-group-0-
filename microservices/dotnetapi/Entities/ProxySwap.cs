@@ -1,7 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.ComponentModel.DataAnnotations;
-using System;
 namespace dotnetapi.Entities
 {
     public class ProxySwap

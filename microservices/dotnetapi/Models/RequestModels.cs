@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace dotnetapi.Models.Requests
 {
-    public class BrowserRequestSwapModel 
+    public class BrowserSubmitRequestModel 
     {
         [Required]
         public string FieldId { get; set; }    
@@ -12,7 +12,7 @@ namespace dotnetapi.Models.Requests
         public string RandToken { get; set; }
         public int? Type { get; set; }
     }
-    public class RequestSwapModel
+    public class PiRequestSwapModel
     {
         [Required]
         public string FieldId { get; set; }
@@ -20,20 +20,11 @@ namespace dotnetapi.Models.Requests
         public string Domain { get; set; }
         public int? Type {get; set; }
     }
-    public class SubmitSwapModel
+    public class PiSubmitSwapModel
     {
         [Required]
         public int? SwapId { get; set; }
         [Required]
         public int? CredentialId { get; set; }
     }
-    public class UserAuthenticatModel
-    {
-        [Required]
-        public string Username { get; set; }
-        [Required]
-        public string Password { get; set; }
-    }
-
-
 }
