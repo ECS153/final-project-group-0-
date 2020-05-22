@@ -29,7 +29,7 @@ namespace dotnetapi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>();
-
+            services.AddMvcCore().AddDataAnnotations();
             services.AddCors();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -75,7 +75,7 @@ namespace dotnetapi
             });
             // These classes will receive a new instance of themselves on each new request
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRequestSwapService, RequestSwapService>();
+            services.AddScoped<ISwapService, SwapService>();
             services.AddScoped<ICredentialService, CredentialService>();
         }
 

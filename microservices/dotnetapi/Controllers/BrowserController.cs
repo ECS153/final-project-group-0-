@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using dotnetapi.Entities;
-using dotnetapi.Models.RequestModels;
+using dotnetapi.Models.Requests;
 using dotnetapi.Services;
 
 namespace dotnetapi.Controllers
@@ -15,9 +15,9 @@ namespace dotnetapi.Controllers
     [Route("[controller]")]
     public class BrowserController : ControllerBase
     {
-        private IRequestSwapService _service;
+        private ISwapService _service;
         private IMapper _mapper;
-        public BrowserController(IRequestSwapService service, IMapper mapper)
+        public BrowserController(ISwapService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;

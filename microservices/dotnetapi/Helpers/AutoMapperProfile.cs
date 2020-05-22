@@ -3,7 +3,7 @@ using AutoMapper;
 using dotnetapi.Entities;
 using dotnetapi.Models.Users;
 using dotnetapi.Models.Credentials;
-using dotnetapi.Models.RequestModels;
+using dotnetapi.Models.Requests;
 
 /* Allows Automatic Mapping From One Class to Another */
 namespace dotnetapi.Helpers
@@ -21,6 +21,10 @@ namespace dotnetapi.Helpers
             CreateMap<Credential, CredentialReadModel>();
 
             CreateMap<BrowserRequestSwapModel, RequestSwap>();
+
+            CreateMap<RequestSwap, RequestSwapModel>();
+
+ 
         }
     }
 }

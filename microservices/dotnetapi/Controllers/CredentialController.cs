@@ -21,7 +21,7 @@ namespace dotnetapi.Controllers
         }
         
         [HttpPost("new")]
-        public IActionResult Create(CredentialCreateModel model) 
+        public IActionResult Create([FromBody]CredentialCreateModel model) 
         {
             int userId = int.Parse(User.Identity.Name);             
 
@@ -35,7 +35,7 @@ namespace dotnetapi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Read(CredentialReadModel model)
+        public IActionResult Read([FromBody]CredentialReadModel model)
         {
             int userId = int.Parse(User.Identity.Name); 
             List<CredentialReadModel> credentials = _service.Read(model, userId);
@@ -44,7 +44,7 @@ namespace dotnetapi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(CredentialUpdateModel model)
+        public IActionResult Update([FromBody]CredentialUpdateModel model)
         {
             int userId = int.Parse(User.Identity.Name);
             try {
@@ -57,7 +57,7 @@ namespace dotnetapi.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(CredentialDeleteModel model)
+        public IActionResult Delete([FromBody]CredentialDeleteModel model)
         {
             int userId = int.Parse(User.Identity.Name);
             try {

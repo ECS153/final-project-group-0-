@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace dotnetapi.Models.RequestModels
+namespace dotnetapi.Models.Requests
 {
     public class BrowserRequestSwapModel 
     {
@@ -12,11 +12,27 @@ namespace dotnetapi.Models.RequestModels
         public string RandToken { get; set; }
         public int? Type { get; set; }
     }
-    public class PiRequestSwapModel
+    public class RequestSwapModel
     {
         [Required]
         public string FieldId { get; set; }
-        
+        [Required]
+        public string Domain { get; set; }
+        public int? Type {get; set; }
+    }
+    public class SubmitSwapModel
+    {
+        [Required]
+        public int? SwapId { get; set; }
+        [Required]
+        public int? CredentialId { get; set; }
+    }
+    public class UserAuthenticatModel
+    {
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        public string Password { get; set; }
     }
 
 

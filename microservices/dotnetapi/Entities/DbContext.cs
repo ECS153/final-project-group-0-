@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 
-
 namespace dotnetapi.Entities
 {
     public class DatabaseContext : DbContext
@@ -18,6 +17,6 @@ namespace dotnetapi.Entities
             options.UseSqlServer(_Configuration.GetConnectionString("DefaultConnection"));
         }
         public DbSet<User> Users { get; set; }
-        public DbSet<ProxySwap> RequestSwaps { get; set; }
+        public DbSet<ProxySwap> ProxySwaps { get; set; }
     }
 }
