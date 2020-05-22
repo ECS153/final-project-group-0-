@@ -2,7 +2,7 @@ using AutoMapper;
 
 using dotnetapi.Entities;
 using dotnetapi.Models.Users;
-
+using dotnetapi.Models.Credentials;
 
 /* Allows Automatic Mapping From One Class to Another */
 namespace dotnetapi.Helpers
@@ -14,6 +14,10 @@ namespace dotnetapi.Helpers
             CreateMap<RegisterModel, User>();
             CreateMap<UpdateModel, User>();
             CreateMap<User, ViewModel>();
+
+            CreateMap<CredentialCreateModel, Credential>();
+            
+            CreateMap<CredentialUpdateModel, Credential>();
         }
     }
 }

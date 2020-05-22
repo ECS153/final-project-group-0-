@@ -70,6 +70,10 @@
               "target": "Package",
               "version": "[3.1.2, )"
             },
+            "System.Data.Entity": {
+              "target": "Package",
+              "version": "[*, )"
+            },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[6.5.1, )"
