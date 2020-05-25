@@ -1,25 +1,24 @@
-# Installation
-Would recommend creating a python virtual environment for the required modules that Picasso needs. After you have a virtual environment, install the required modules from the requirements.txt, and then you can start Picasso
+# picasso
 
-## Installing Virtual Environment
-1. Make sure you have python3 installed
-2. Install venv as follows below
-### Mac / Linux
-`python3 -m pip install --user virtualenv`
+## Project setup
+```
+npm install
+```
 
-### Windows
-`py -m pip install --user virtualenv`
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
-## Activating Virtual Environment
-### Mac/Linux
-1. go to this directory
-2. Command: `source env/bin/activate`
-### Windows
-1. go to this directory
-2. Command: `.\env\Scripts\activate`
+### Compiles and minifies for production
+```
+npm run build
+```
 
-## Installing all required modules
-`pip install -r requirements.txt `
+### Lints and fixes files
+```
+npm run lint
+```
 
-# Running Picasso
-`python3 gui.py`
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
