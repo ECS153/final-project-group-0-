@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="option.css" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" />
+</head>
+
+<body>
+
+	<div id="popup-content">
+
+		<div id="sign-in" style="display:none">
+			<input type='checkbox' id='form-switch'>
+			<div id="login-form">
+				<input id="login-user" type="text" placeholder="Username">
+				<input id="login-pass" type="password" placeholder="Password">
+				<button id="login_btn" type='button'>Login</button>
+				<label for='form-switch'><span>Register</span></label>
+			</div>
+			<div id="register-form">
+				<input type="text" placeholder="First Name" required>
+				<input type="text" placeholder="Last Name" required>
+				<input type="text" placeholder="Username" required>
+				<input type="password" placeholder="Password" required>
+				<button type='submit'>Register</button>
+				<label for='form-switch'>Sign in</label>
+			</div>
+		</div>
+
+		<div class="success-msg" id="success" style="display: none">
+				Server status: Ready
+		</div>
+
+		<div class="error-msg" id="failure" style="display: none">
+			Something went wrong!
+		</div>
+
+	</div>
+	<script src="option.js"></script>
+</body>
+
+</html>

@@ -50,3 +50,7 @@ function sendToServer(tempIDs) {
     }
   });
 }
+
+function checkToken() {
+
+}

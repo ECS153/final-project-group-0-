@@ -1,12 +1,10 @@
-﻿form {
-	margin: 0 auto;
-	width: 200px
+﻿body {
+	width:200px;
 }
 
 input {
 	margin-bottom: 3px;
 	padding: 10px 20px;
-	width: 80%;
 	border: 1px solid #CCC
 }
 

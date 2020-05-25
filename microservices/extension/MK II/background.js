@@ -39,15 +39,6 @@ browser.menus.create({
 	contexts: ["editable"]
 });
 
-browser.menus.create({
-	id: "server",
-	title: "Server status",
-	documentUrlPatterns: ["https://*/*", "http://*/*"],
-	contexts: ["editable"],
-	enabled: false,
-	visible: false
-});
-
 
 // initialize the tokens
 var username = makeUsername();
@@ -63,6 +54,7 @@ var securedFields = {};
 // fillout the values
 browser.menus.onClicked.addListener((info, tab) => {
 
+	/*
 	var type = info.menuItemId;
 	switch (type) {
 		case "username":
@@ -133,9 +125,105 @@ browser.menus.onClicked.addListener((info, tab) => {
 					})
 				}
 			});
-	}
+	} */
 
 });
+
+
+// identification credentials
+var defaultSettings = {
+	token: "none"
+};
+
+function checkStoredSettings(storedSettings) {
+	if (!storedSettings.token) {
+		browser.storage.local.set(defaultSettings);
+	}
+}
+
+const gettingStoredSettings = browser.storage.local.get();
+gettingStoredSettings.then(checkStoredSettings, onError);
+
+function onError(e) {
+	console.error(e);
+}
+
+var tokenValid;
+function verifyToken(storedSettings) {
+	if (storedSettings.token == "none") {
+		tokenValid = false;
+	} else {
+		var url = "http://localhost:4000/user/";
+		var bearer = 'Bearer ' + storedSettings.token;
+		fetch(url, {
+			method: 'GET',
+			withCredentials: true,
+			credentials: 'include',
+			headers: {
+				'Authorization': bearer,
+				'Content-Type': 'application/json'
+			}
+		}).then(response => {
+			if (response.ok) {
+				tokenValid = true;
+			} else {
+				tokenValid = false;
+			}
+		});
+	}
+}
+
+function login(info) {
+	fetch('http://localhost:4000/user/authenticate', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: info,
+	}).then(response => {
+		if (response.ok) {
+			return response.json();
+		} else {
+			return false;
+		}
+	}).then(body => {
+		if (body) {
+			var updatedSettings = {
+				token: body.token
+			};
+			browser.storage.local.set(updatedSettings);
+			browser.runtime.sendMessage({
+				status: "ok"
+			});
+		} else {
+			browser.runtime.sendMessage({
+				response: "failure"
+			});
+		}
+	});
+}
+
+
+// popup communication
+function handleMessage(request, sender, sendResponse) {
+	console.log("request from popup: " +
+		request.msg);
+
+	if (request.msg == "verify token") {
+		const gettingStoredSettings = browser.storage.local.get();
+		gettingStoredSettings.then(verifyToken, onError);
+
+		if (tokenValid) {
+			sendResponse({ response: "success" });
+		} else {
+			sendResponse({ response: "login" });
+		}
+	} else {
+		login(request.msg);	
+	}
+}
+
+browser.runtime.onMessage.addListener(handleMessage);
 
 
 // auxiliary
