@@ -42,7 +42,7 @@ function createMenus() {
 }
 
 var username = makeUsername();
-var password = makePassword();
+var password = makeUsername();
 var email = makeEmail();
 var visa = makeCC("visa");
 var mastercard = makeCC("mastercard");
@@ -55,10 +55,11 @@ createMenus();
 // fillout the values
 browser.menus.onClicked.addListener((info, tab) => {
     var type = info.menuItemId;
+    browser.browserAction.openPopup();
 
     if (type == "gen") {
         username = makeUsername();
-        password = makePassword();
+        password = makeUsername();
         email = makeEmail();
         visa = makeCC("visa");
         mastercard = makeCC("mastercard");
@@ -68,8 +69,6 @@ browser.menus.onClicked.addListener((info, tab) => {
         //reload tab so as to reset everything
         browser.tabs.reload();
     } else {
-        browser.browserAction.openPopup();
-
         var value = "default";
         var credentialType;
 
@@ -214,7 +213,9 @@ function login(info) {
 }
 
 function sendMsg(msg){
-    browser.runtime.sendMessage({
+    browser.runtime.sendMessage({        #origin = flow.request.headers["origin"]
+        #oext = tldextract.extract(origin)
+        #odomain = oext.domain + "." + oext.suffix
       msg: msg
     });
 }
