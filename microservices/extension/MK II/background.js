@@ -1,46 +1,46 @@
 
-// create the menus
-fields = ["username", "password", "email", "cc"]
-sub_fields = ["visa", "mastercard", "american express", "discover"]
+function createMenus() {
+    // create the menus
+    fields = ["username", "password", "email", "cc"]
+    sub_fields = ["visa", "mastercard", "american express", "discover"]
 
-var i;
-for (i = 0; i < fields.length; i++) {
-  browser.menus.create({
-    id: fields[i],
-    title: fields[i],
-    documentUrlPatterns: ["https://*/*", "http://*/*"],
-    contexts: ["editable"]
-  });
-
-  if (fields[i] == "cc") {
-    var j;
-    for (j = 0; j < sub_fields.length; j++) {
+    var i;
+    for (i = 0; i < fields.length; i++) {
       browser.menus.create({
-        id: sub_fields[j],
-        parentId: fields[i],
-        title: sub_fields[j],
+        id: fields[i],
+        title: fields[i],
         documentUrlPatterns: ["https://*/*", "http://*/*"],
         contexts: ["editable"]
       });
+
+      if (fields[i] == "cc") {
+        var j;
+        for (j = 0; j < sub_fields.length; j++) {
+          browser.menus.create({
+            id: sub_fields[j],
+            parentId: fields[i],
+            title: sub_fields[j],
+            documentUrlPatterns: ["https://*/*", "http://*/*"],
+            contexts: ["editable"]
+          });
+        }
+      }
     }
-  }
+
+    browser.menus.create({
+      id: "separator",
+      type: "separator",
+      contexts: ["editable"]
+    });
+
+    browser.menus.create({
+        id: "gen",
+    	title: "Generate new Tokens",
+    	documentUrlPatterns: ["https://*/*", "http://*/*"],
+    	contexts: ["editable"]
+    });
 }
 
-browser.menus.create({
-  id: "separator",
-  type: "separator",
-  contexts: ["editable"]
-});
-
-browser.menus.create({
-	id: "reset",
-	title: "Generate new Tokens",
-	documentUrlPatterns: ["https://*/*", "http://*/*"],
-	contexts: ["editable"]
-});
-
-
-// initialize the tokens
 var username = makeUsername();
 var password = makePassword();
 var email = makeEmail();
@@ -48,23 +48,43 @@ var visa = makeCC("visa");
 var mastercard = makeCC("mastercard");
 var american_express = makeCC("american express");
 var discover = makeCC("discover");
+var token;
 
-var securedFields = {};
+createMenus();
 
 // fillout the values
 browser.menus.onClicked.addListener((info, tab) => {
+    var type = info.menuItemId;
 
-	/*
-	var type = info.menuItemId;
-	switch (type) {
+    if (type == "gen") {
+        username = makeUsername();
+        password = makePassword();
+        email = makeEmail();
+        visa = makeCC("visa");
+        mastercard = makeCC("mastercard");
+        american_express = makeCC("american express");
+        discover = makeCC("discover");
+
+        //reload tab so as to reset everything
+        browser.tabs.reload();
+    } else {
+        browser.browserAction.openPopup();
+
+        var value = "default";
+        var credentialType;
+
+        switch (type) {
 		case "username":
 			value = username;
+            credentialType = 2;
 			break;
 		case "password":
 			value = password;
+            credentialType = 0;
 			break;
 		case "email":
 			value = email;
+            credentialType = 3;
 			break;
 		case "visa":
 			value = visa;
@@ -78,55 +98,47 @@ browser.menus.onClicked.addListener((info, tab) => {
 		case "discover":
 			value = discover;
 			break;
-	}
+	    }
 
-  if (type == "reset") {
-		browser.runtime.reload();
-		browser.tabs.reload();
-  } else {
-    var vars = {
+        var vars = {
 			input: info.targetElementId,
 			data: value
-    };
+        };
 
-    browser.tabs.executeScript(tab.id, {
-      allFrames: true,
-      code: 'var vars = ' + JSON.stringify(vars)
-    }, function () {
-      browser.tabs.executeScript(tab.id, {
-        allFrames: true,
-        file: 'script.js'
-      });
-    });
+        browser.tabs.executeScript(tab.id, {
+            allFrames: true,
+            code: 'var vars = ' + JSON.stringify(vars)
+        }, function () {
+            browser.tabs.executeScript(tab.id, {
+                allFrames: true,
+                file: 'script.js'
+            });
+        });
 
-    if (info.parentMenuItemId == "cc") {
-      type = "cc"
-    }
-		securedFields[type] = value;
+        if (info.parentMenuItemId == "cc") {
+            type = "cc";
+            credentialType = 1;
+        }
 
-		// sync with server
-		fetch('https://occipital-brick-pantry.glitch.me/', {
-			method: 'POST',
+        var json = {
+            FieldId : type,
+            RandToken: value,
+            domain: domain_from_url(tab.url),
+            type: credentialType
+        };
+
+        var bearer = 'Bearer ' + token;
+        fetch('http://192.168.1.5:5000/browser', {
+            method: 'POST',
+			withCredentials: true,
+			credentials: 'include',
 			headers: {
-				'Content-Type': 'application/json',
+				'Authorization': bearer,
+				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(securedFields),
-		})
-			.then(response => {
-				if (response.ok) {
-					browser.menus.update("server", {
-						icons: { "64": "success.png"},
-						visible: true
-					})
-				} else {
-					browser.menus.update("server", {
-						icons: { "64": "failure.png" },
-						visible: true
-					})
-				}
-			});
-	} */
-
+    		body: JSON.stringify(json)
+    	});
+    }
 });
 
 
@@ -148,13 +160,13 @@ function onError(e) {
 	console.error(e);
 }
 
-var tokenValid;
 function verifyToken(storedSettings) {
 	if (storedSettings.token == "none") {
-		tokenValid = false;
+		sendMsg("login");
 	} else {
-		var url = "http://localhost:4000/user/";
-		var bearer = 'Bearer ' + storedSettings.token;
+		var url = "http://192.168.1.5:5000/user/";
+        token = storedSettings.token;
+		var bearer = 'Bearer ' + token;
 		fetch(url, {
 			method: 'GET',
 			withCredentials: true,
@@ -165,23 +177,23 @@ function verifyToken(storedSettings) {
 			}
 		}).then(response => {
 			if (response.ok) {
-				tokenValid = true;
+				sendMsg("success");
 			} else {
-				tokenValid = false;
+				sendMsg("failure");
 			}
 		});
 	}
 }
 
 function login(info) {
-	fetch('http://localhost:4000/user/authenticate', {
+	fetch('http://192.168.1.5:5000/user/authenticate', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
 		body: info,
 	}).then(response => {
-		if (response.ok) {
+		if (response.ok) {    browser.tabs.reload();
 			return response.json();
 		} else {
 			return false;
@@ -192,17 +204,20 @@ function login(info) {
 				token: body.token
 			};
 			browser.storage.local.set(updatedSettings);
-			browser.runtime.sendMessage({
-				status: "ok"
-			});
+
+            browser.tabs.reload();
+            verifyToken(updatedSettings);
 		} else {
-			browser.runtime.sendMessage({
-				response: "failure"
-			});
+			sendMsg("failure");
 		}
 	});
 }
 
+function sendMsg(msg){
+    browser.runtime.sendMessage({
+      msg: msg
+    });
+}
 
 // popup communication
 function handleMessage(request, sender, sendResponse) {
@@ -212,14 +227,8 @@ function handleMessage(request, sender, sendResponse) {
 	if (request.msg == "verify token") {
 		const gettingStoredSettings = browser.storage.local.get();
 		gettingStoredSettings.then(verifyToken, onError);
-
-		if (tokenValid) {
-			sendResponse({ response: "success" });
-		} else {
-			sendResponse({ response: "login" });
-		}
 	} else {
-		login(request.msg);	
+		login(request.msg);
 	}
 }
 
@@ -239,7 +248,7 @@ function makeUsername() {
 
 function makePassword(len) {
 	var length = (len) ? (len) : (10);
-	var string = "abcdefghijklmnopqrstuvwxyz"; //to upper 
+	var string = "abcdefghijklmnopqrstuvwxyz"; //to upper
 	var numeric = '0123456789';
 	var punctuation = '!@#$%^&*()_+~`|}{[]\:;?><,./-=';
 	var password = "";
@@ -360,4 +369,16 @@ function makeCC(issuer) {
 	t = str.join('');
 	t = t.substr(0, len);
 	return t;
+}
+
+function domain_from_url(url) {
+    var result
+    var match
+    if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
+        result = match[1]
+        if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
+            result = match[1]
+        }
+    }
+    return result
 }

@@ -1,18 +1,19 @@
-import pyodbc 
-# Some other example server values are
-# server = 'localhost\sqlexpress' # for a named instance
-# server = 'myserver,port' # to specify an alternate port
-server = '192.168.1.4' 
-database = 'secure' 
-username = 'sa' 
-password = 'Anac0nda' 
+import pyodbc
+
+
+server = '192.168.1.4'
+database = 'secret'
+username = 'sa'
+password = 'Anac0nda'
 cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
 cursor = cnxn.cursor()
 
 #Sample select query
-cursor.execute("SELECT * FROM ProxySwaps;") 
-row = cursor.fetchone()  
+ip = '192.168.1.24'
+domain = 'wikipedia.org'
+cursor.execute("SELECT RandToken, Credential FROM ProxySwaps WHERE Ip=? AND Domain=?;", ip, domain)
+row = cursor.fetchone()
 
 while row:
-    print(row[3])
+    print(row)
     row = cursor.fetchone()
