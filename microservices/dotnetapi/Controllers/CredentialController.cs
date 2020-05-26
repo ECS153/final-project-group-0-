@@ -34,7 +34,7 @@ namespace dotnetapi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Read([FromBody]CredentialReadModel model)
+        public IActionResult Read([FromQuery]CredentialReadModel model)
         {
             int userId = int.Parse(User.Identity.Name); 
             List<CredentialReadModel> credentials = _service.Read(model, userId);

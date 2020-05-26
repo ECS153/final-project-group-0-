@@ -11,7 +11,7 @@ namespace dotnetapi.Models.Credentials
         public string Hint { get; set; }
         [Required]
         public string Value { get; set; }
-        public string Domain { get; set; }
+        public string Domain { get; set; } = "";
     }
     public class CredentialReadModel {
         public int? Id { get; set; }

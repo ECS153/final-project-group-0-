@@ -73,7 +73,7 @@ namespace dotnetapi.Services
 
             // Add to ProxySwap Database, remove from RequestSwap Database
             _context.ProxySwaps.Add(proxySwap);
-            user.RequestSwaps.Remove(reqSwap);
+            user.RequestSwaps.Remove(reqSwap); //TODO: ADD BACK LATER
             _context.SaveChanges();
         }
     

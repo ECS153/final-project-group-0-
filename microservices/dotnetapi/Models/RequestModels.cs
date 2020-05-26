@@ -10,10 +10,12 @@ namespace dotnetapi.Models.Requests
         public string Domain { get; set; }
         [Required]
         public string RandToken { get; set; }
+        [Required]
         public int? Type { get; set; }
     }
     public class PiRequestSwapModel
     {
+        public int? Id { get; set; }
         [Required]
         public string FieldId { get; set; }
         [Required]

@@ -35,7 +35,9 @@ namespace dotnetapi.Services
             if (curUser.Credentials.Any(x => x.Hint == model.Hint)) {
                 throw new AppException("This credential hint is already used by another of your credentials");
             }
-            curUser.Credentials.Add(_mapper.Map<Credential>(model));
+            var cred = _mapper.Map<Credential>(model);
+            cred.ValueHash = model.Value;
+            curUser.Credentials.Add(cred);
             _context.SaveChanges();
 
             return model;

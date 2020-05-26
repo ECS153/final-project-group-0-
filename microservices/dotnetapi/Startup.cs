@@ -76,11 +76,11 @@ namespace dotnetapi
                 };
             });
             
-            services.AddHttpsRedirection(opts => {
+          /*  services.AddHttpsRedirection(opts => {
                 opts.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
                 opts.HttpsPort = 443;
             });
-
+*/
             // These classes will receive a new instance of themselves on each new request
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISwapService, SwapService>();
@@ -101,7 +101,7 @@ namespace dotnetapi
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 
