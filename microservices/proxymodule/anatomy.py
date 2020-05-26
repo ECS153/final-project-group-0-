@@ -1,42 +1,52 @@
 from mitmproxy import http, ctx
-import requests 
-
+import regex
+import tldextract
 import pyodbc
 
-# database 
-#def __init__(self):
-    # DATABASE VARIABLES
-server = '192.168.1.4' 
-database = 'secure' 
-username = 'sa' 
-password = 'Anac0nda' 
+# DATABASE VARIABLES
+server = '192.168.1.4'
+database = 'secret'
+username = 'sa'
+password = 'Anac0nda'
 cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
 cursor = cnxn.cursor()
 
 #basic query
 
-cursor.execute("SELECT * FROM ProxySwaps;")
-row = cursor.fetchone()
+#ip = '192.168.1.24'
+#domain = 'wikipedia.org'
+#cursor.execute("SELECT RandToken, Credential FROM ProxySwaps WHERE Ip=? AND Domain=?;", ip, domain)
+#row = cursor.fetchone()
 
-# would be updated in the database per each request via extension
-generated_email = 'abcdefg'
-generated_pass = '123456789'
-actual_email = ""
-actual_pass = ""
+#while row:
+    #print(row)
+    #row = cursor.fetchone()
 
-# get actual creds given generated
-while row: 
-    if (row[3] == generated_email):
-        actual_email = row[4]
-    if (row[3] == generated_pass):
-        actual_pass = row[4]
-    row = cursor.fetchone()
+
 
 #MITM REQUEST
 def request(flow: http.HTTPFlow) -> None:
-    #ctx.log.info("url: %s\n" % flow.request.pretty_url)
-    if flow.request.pretty_url == "https://www.ebay.com/signin/s" and flow.request.method == "POST":
-    
-        flow.request.content = flow.request.content.replace(bytes(generated_email, encoding='utf-8'),bytes(actual_email, encoding='utf-8'))
-        flow.request.content = flow.request.content.replace(bytes(generated_pass, encoding='utf-8'), bytes(actual_pass, encoding='utf-8'))
-        ctx.log.info("GDFSFDSFDS url: %s\n" % flow.request.content)
+
+    if flow.request.method == "POST":
+        form = flow.request.urlencoded_form
+        keys = form.keys()
+        for key in keys:
+            values = form.get_all(key)
+            ctx.log.info(values)
+
+        address = flow.client_conn.address[0]
+        #ip = regex.sub(r'^.*:', '', address)
+        ip = '192.168.1.24'
+        host = flow.request.pretty_host
+        ext = tldextract.extract(host)
+        domain = ext.domain + "." + ext.suffix
+
+        cursor.execute("SELECT RandToken, Credential FROM ProxySwaps WHERE Ip=? AND Domain=?;", ip, domain)
+        row = cursor.fetchone()
+
+        while row:
+            ctx.log.info('rand : %s and cred : %s' % (row[0], row[1]))
+            #ctx.log.info("-------------")
+            if (row[0] and row[1]):
+                flow.request.content = flow.request.content.replace(bytes(row[0], encoding='ascii'),bytes(row[1], encoding='ascii'))
+            row = cursor.fetchone()

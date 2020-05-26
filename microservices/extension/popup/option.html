@@ -1,16 +1,39 @@
 ﻿<!DOCTYPE html>
 
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="option.css"/>
-  </head>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="option.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" />
+</head>
 
-<body>
-  <div id="popup-content">
-    <a href="#" class="button" id="scan">Scan Page</a>
-    <a href="#" class="button" id="send">Ready?</a>
-  </div>
+<body onload="checkToken()">
+
+	<div id="popup-content">
+		<!---
+		<a href="#" class="button" id="scan">Scan Page</a>
+		<a href="#" class="button" id="send">Ready?</a>
+		-->
+
+		<div id="sign-in">
+			<input type='checkbox' id='form-switch'>
+			<form id='login-form' action="" method='post'>
+				<input type="text" placeholder="Username" required>
+				<input type="password" placeholder="Password" required>
+				<button type='submit'>Login</button>
+				<label for='form-switch'><span>Register</span></label>
+			</form>
+			<form id='register-form' action="" method='post'>
+				<input type="text" placeholder="First Name" required>
+				<input type="text" placeholder="Last Name" required>
+				<input type="text" placeholder="Username" required>
+				<input type="password" placeholder="Password" required>
+				<button type='submit'>Register</button>
+				<label for='form-switch'>Sign in</label>
+			</form>
+		</div>
+
+	</div>
   <script src="option.js"></script>
 </body>
 
