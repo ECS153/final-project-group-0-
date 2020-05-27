@@ -38,5 +38,5 @@ This week I started reworking our GUI for our application. Earlier in the week w
 ### Raza
 The [extension](https://github.com/ECS153/final-project-group-0-/commit/ea69b9ad8561d88018a005f70dab5b82e09ebd28) is 95% percent finished. I only need to add an option to be able to toggle the proxy. 
 Switching to contextmenus for the extension made it universal so it ended up being a good decision.
-The [proxy module](https://github.com/ECS153/final-project-group-0-/commit/4d4e30048ef144b3bb6ae827a1704a84f9689519) was not working for url-encoded forms so I had been working on that for most of the week. It is working now.
-All websites that do not encrypt the form fields client-side are working. I am stuck on trying to see if we can do something about when fields are encrypted client side.
+The [proxy module](https://github.com/ECS153/final-project-group-0-/commit/4d4e30048ef144b3bb6ae827a1704a84f9689519) ([design doc](https://docs.google.com/document/d/19DOHn-kxQCHsZ6j-u2Ykwr2dHSKq6gtWihOWBx5ISWU/edit?usp=sharing)) was not working for url-encoded forms so I had been working on that for most of the week. It is working now.
+All websites that do not encrypt the form fields client-side are working. I am stuck on trying to see if we can do something about when fields are encrypted client side i.e before they get to our proxy as the user inputed them.

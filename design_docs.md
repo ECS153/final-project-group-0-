@@ -21,7 +21,7 @@ corresponding user's raspberry pi to confirm as well as the credentials (only pa
 Because of the current climate, our team will mostly work remotely. Because of this, we felt that the best way to develop a group project would be to use [microservices](https://youtu.be/y8OnoxKotPQ).
 
 ## Microservices
-### MITM Proxy Add On [Design](https://docs.google.com/document/d/19DOHn-kxQCHsZ6j-u2Ykwr2dHSKq6gtWihOWBx5ISWU/edit?usp=sharing)
+### MITM Proxy Script [Design](https://docs.google.com/document/d/19DOHn-kxQCHsZ6j-u2Ykwr2dHSKq6gtWihOWBx5ISWU/edit?usp=sharing)
 Mitmproxy is an application we found that can act as a man in the middle between the router and the browser. It essentially reads every request that is sent, and then repackages it into a new request to send to its intended destination. Because of this, in constrast to most proxies, it can actually read https requests as well. In addition to all of the built in tools and commands that you can use to read and modify all requests, it also supports user created add ons. We created an add on that can connect to a database table that contains the tokens that our chrome extension generates, and change them with the real credentials.
 
 ### Secret API [Design](https://docs.google.com/document/d/1CBh3EtYRP9pQcqUtRFken9FF3jxMfvshMlcplv2MuNk/edit?usp=sharing)
