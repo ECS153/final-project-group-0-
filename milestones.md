@@ -34,3 +34,9 @@ and looked into some of the viable hardware that could be used for the LCD scree
 
 ### Martin
 This week I started reworking our GUI for our application. Earlier in the week we noticed that our display for the pi was delayed, so we decided to create the GUI in a more flexible framework (vue.js) instead of relying on the pi. So I mainly spent time learning vue.js and creating a GUI.
+
+### Raza
+The [extension](https://github.com/ECS153/final-project-group-0-/commit/ea69b9ad8561d88018a005f70dab5b82e09ebd28) is 95% percent finished. I only need to add an option to be able to toggle the proxy. 
+Switching to contextmenus for the extension made it universal so it ended up being a good decision.
+The [proxy module](https://github.com/ECS153/final-project-group-0-/commit/4d4e30048ef144b3bb6ae827a1704a84f9689519) was not working for url-encoded forms so I had been working on that for most of the week. It is working now.
+All websites that do not encrypt the form fields client-side are working. I am stuck on trying to see if we can do something about when fields are encrypted client side.
