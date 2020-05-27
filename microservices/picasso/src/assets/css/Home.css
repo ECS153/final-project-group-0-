@@ -1,0 +1,25 @@
+#home {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.slide-fade-enter-active {
+    transition: all .2s ease-out;
+}
+.slide-fade-leave-active {
+    transition: all .2s ease-in;
+  }
+  .slide-fade-enter {
+    transform: translateY(15px);
+    opacity: 0;
+  } 
+  .slide-fade-leave-to
+  /* .slide-fade-leave-active below version 2.1.8 */ {
+    transform: translateY(-15px);
+    opacity: 0;
+  }

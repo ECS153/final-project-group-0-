@@ -1,58 +1,46 @@
 <template>
   <div id="app">
-    <transition name="slide-fade" mode="out-in">
-      <RefreshButton v-if="requestSwap==null" @click="refresh"></RefreshButton>
-      <CredentialForm v-else :token="loginToken" :swapProps="requestSwap" @submit="requestSwap=null"></CredentialForm>
-    </transition>
+    <div id="nav">
+      <router-link to="/">Home</router-link>
+      <router-link to="/credential">Credentials </router-link>
+      <router-link to="/account">Account</router-link>
+    </div>
+    <router-view />
   </div>
 </template>
 
-<script>
-import axios from 'axios'
-import RefreshButton from './components/RefreshButton'
-import CredentialForm from './components/CredentialForm'
-
-export default {
-  name: 'App',
-  components: {
-    CredentialForm,
-    RefreshButton,
-  },
-  data () {
-    return {
-      requestSwap: null,
-      selectedCred: "",
-      loginToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTU5MDM3ODg1MiwiZXhwIjoxNTkwNDY1MjUyLCJpYXQiOjE1OTAzNzg4NTJ9.ztoxoxV_0QqRkjiNZuddA32z6tFAFcWnKHIKqMaw--A',
-      availableCreds: null,
-    }
-  }, 
-  computed: {
-    credHints: function() {
-      if (this.availableCreds != null) 
-        return this.availableCreds.map(h => h.hint && h.id)
-      return null
-    }
-  },
-  methods: {
-    refresh: function() {
-      axios.request({
-         url: 'http://192.168.1.5:5000/pi/',
-        method: 'get',
-        headers : {
-          'Authorization': 'BEARER ' + this.loginToken
-        }
-      })
-      .then(resp => {
-          if (resp.status == 200) {
-            this.requestSwap = resp.data
-          }     
-      })
-    }
-  }
-}
-</script>
-
 <style>
-  @import './assets/app.css';
-  @import './assets/reset.css';
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
+
+#app, body, html {
+    height: 100%;
+}
+#app {
+ 
+  font-family: "Noto Sans", sans-serif;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+#nav {
+  width: 100%;
+  height: 30px;
+  padding: 15px 30px 0 15px;
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+#nav a {
+  padding: 0 5px 0 5px;
+  font-weight: bold;
+  color: #2c3e50;
+  text-decoration: none;
+}
+#nav a.router-link-exact-active {
+  color: #f50057;
+}
+
+
 </style>
