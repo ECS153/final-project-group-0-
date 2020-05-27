@@ -213,9 +213,7 @@ function login(info) {
 }
 
 function sendMsg(msg){
-    browser.runtime.sendMessage({        #origin = flow.request.headers["origin"]
-        #oext = tldextract.extract(origin)
-        #odomain = oext.domain + "." + oext.suffix
+    browser.runtime.sendMessage({    
       msg: msg
     });
 }
