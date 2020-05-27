@@ -30,3 +30,7 @@ and looked into some of the viable hardware that could be used for the LCD scree
 
 ### [Video](https://www.youtube.com/watch?v=9Hz0tNPrG1A&feature=youtu.be)
 
+## Milestone 3
+
+### Martin
+This week I started reworking our GUI for our application. Earlier in the week we noticed that our display for the pi was delayed, so we decided to create the GUI in a more flexible framework (vue.js) instead of relying on the pi. So I mainly spent time learning vue.js and creating a GUI.
