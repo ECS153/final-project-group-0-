@@ -1,36 +1,25 @@
 ﻿body {
-	width:250px;
+	width: 200px;
+	padding: 10px;
+	border: 1px solid #CCC;
+	background-color: rgba(0,0,0,0.7);
 }
 
 input {
 	margin-bottom: 3px;
 	padding: 10px 20px;
-	border: 1px solid #CCC
+	border: 1px solid #CCC;
+	background-color:whitesmoke;
 }
 
 button {
-	padding: 10px
+	padding: 5px;
 }
 
 label {
 	cursor: pointer
 }
 
-#form-switch {
-	display: none
-}
-
-#register-form {
-	display: none
-}
-
-#form-switch:checked ~ #register-form {
-	display: block
-}
-
-#form-switch:checked ~ #login-form {
-	display: none
-}
 
 .info-msg,
 .success-msg,
@@ -43,7 +32,7 @@ label {
 
 .info-msg {
 	color: #059;
-	background-color: #BEF;
+	background-color: antiquewhite;
 }
 
 .success-msg {

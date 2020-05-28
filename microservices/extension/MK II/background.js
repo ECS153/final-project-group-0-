@@ -1,143 +1,148 @@
-
 function createMenus() {
-    // create the menus
-    fields = ["username", "password", "email", "cc"]
-    sub_fields = ["visa", "mastercard", "american express", "discover"]
+	// create the menus
+	fields = ["username", "password", "email", "cc"]
+	sub_fields = ["visa", "mastercard", "american express", "discover"]
 
-    var i;
-    for (i = 0; i < fields.length; i++) {
-      browser.menus.create({
-        id: fields[i],
-        title: fields[i],
-        documentUrlPatterns: ["https://*/*", "http://*/*"],
-        contexts: ["editable"]
-      });
+	var i;
+	for (i = 0; i < fields.length; i++) {
+		browser.menus.create({
+			id: fields[i],
+			title: fields[i],
+			documentUrlPatterns: ["https://*/*", "http://*/*"],
+			contexts: ["editable"]
+		});
 
-      if (fields[i] == "cc") {
-        var j;
-        for (j = 0; j < sub_fields.length; j++) {
-          browser.menus.create({
-            id: sub_fields[j],
-            parentId: fields[i],
-            title: sub_fields[j],
-            documentUrlPatterns: ["https://*/*", "http://*/*"],
-            contexts: ["editable"]
-          });
-        }
-      }
-    }
+		if (fields[i] == "cc") {
+			var j;
+			for (j = 0; j < sub_fields.length; j++) {
+				browser.menus.create({
+					id: sub_fields[j],
+					parentId: fields[i],
+					title: sub_fields[j],
+					documentUrlPatterns: ["https://*/*", "http://*/*"],
+					contexts: ["editable"]
+				});
+			}
+		}
+	}
 
-    browser.menus.create({
-      id: "separator",
-      type: "separator",
-      contexts: ["editable"]
-    });
+	browser.menus.create({
+		id: "separator",
+		type: "separator",
+		contexts: ["editable"]
+	});
 
-    browser.menus.create({
-        id: "gen",
-    	title: "Generate new Tokens",
-    	documentUrlPatterns: ["https://*/*", "http://*/*"],
-    	contexts: ["editable"]
-    });
+	browser.menus.create({
+		id: "gen",
+		title: "Generate new Tokens",
+		documentUrlPatterns: ["https://*/*", "http://*/*"],
+		contexts: ["editable"]
+	});
 }
 
 var username = makeUsername();
-var password = makeUsername();
+var password = makePassword();
 var email = makeEmail();
 var visa = makeCC("visa");
 var mastercard = makeCC("mastercard");
 var american_express = makeCC("american express");
 var discover = makeCC("discover");
 var token;
+var logged_in;
 
 createMenus();
 
 // fillout the values
-browser.menus.onClicked.addListener((info, tab) => {
-    var type = info.menuItemId;
-    browser.browserAction.openPopup();
+browser.menus.onClicked.addListener(async (info, tab) => {
+	var type = info.menuItemId;
+	await browser.browserAction.openPopup();
 
-    if (type == "gen") {
-        username = makeUsername();
-        password = makeUsername();
-        email = makeEmail();
-        visa = makeCC("visa");
-        mastercard = makeCC("mastercard");
-        american_express = makeCC("american express");
-        discover = makeCC("discover");
 
-        //reload tab so as to reset everything
-        browser.tabs.reload();
-    } else {
-        var value = "default";
-        var credentialType;
+	if (type == "gen") {
+		username = makeUsername();
+		password = makeUsername();
+		email = makeEmail();
+		visa = makeCC("visa");
+		mastercard = makeCC("mastercard");
+		american_express = makeCC("american express");
+		discover = makeCC("discover");
 
-        switch (type) {
-		case "username":
-			value = username;
-            credentialType = 2;
-			break;
-		case "password":
-			value = password;
-            credentialType = 0;
-			break;
-		case "email":
-			value = email;
-            credentialType = 3;
-			break;
-		case "visa":
-			value = visa;
-			break;
-		case "mastercard":
-			value = mastercard;
-			break;
-		case "american express":
-			value = american_express;
-			break;
-		case "discover":
-			value = discover;
-			break;
-	    }
+		//reload tab so as to reset everything
+		browser.tabs.reload();
+	} else {
+		var value = "Please Login first";
+		var credentialType;
 
-        var vars = {
+		if (logged_in) {
+			switch (type) {
+				case "username":
+					value = username;
+					credentialType = 2;
+					break;
+				case "password":
+					value = password;
+					credentialType = 0;
+					break;
+				case "email":
+					value = email;
+					credentialType = 3;
+					break;
+				case "visa":
+					value = visa;
+					break;
+				case "mastercard":
+					value = mastercard;
+					break;
+				case "american express":
+					value = american_express;
+					break;
+				case "discover":
+					value = discover;
+					break;
+			}
+		}
+
+		var vars = {
 			input: info.targetElementId,
 			data: value
-        };
+		};
 
-        browser.tabs.executeScript(tab.id, {
-            allFrames: true,
-            code: 'var vars = ' + JSON.stringify(vars)
-        }, function () {
-            browser.tabs.executeScript(tab.id, {
-                allFrames: true,
-                file: 'script.js'
-            });
-        });
+		browser.tabs.executeScript(tab.id, {
+			allFrames: true,
+			code: 'var vars = ' + JSON.stringify(vars)
+		}, function () {
+			browser.tabs.executeScript(tab.id, {
+				allFrames: true,
+				file: 'script.js'
+			});
+		});
 
-        if (info.parentMenuItemId == "cc") {
-            type = "cc";
-            credentialType = 1;
-        }
+		if (info.parentMenuItemId == "cc") {
+			type = "cc";
+			credentialType = 1;
+		}
 
-        var json = {
-            FieldId : type,
-            RandToken: value,
-            domain: domain_from_url(tab.url),
-            type: credentialType
-        };
+		var json = {
+			FieldId: type,
+			RandToken: value,
+			domain: domain_from_url(tab.url),
+			type: credentialType
+		};
 
-        var bearer = 'Bearer ' + token;
-        fetch('http://192.168.1.5:5000/browser', {
-            method: 'POST',
-			withCredentials: true,
-			credentials: 'include',
-			headers: {
-				'Authorization': bearer,
-				'Content-Type': 'application/json'
-			},
-    		body: JSON.stringify(json)
-    	});
-    }
+		if (logged_in) {
+			var bearer = 'Bearer ' + token;
+			fetch('http://192.168.1.5:5000/browser', {
+				method: 'POST',
+				withCredentials: true,
+				credentials: 'include',
+				headers: {
+					'Authorization': bearer,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(json)
+			});
+		}
+	}
 });
 
 
@@ -159,12 +164,13 @@ function onError(e) {
 	console.error(e);
 }
 
-function verifyToken(storedSettings) {
+function checkStatus(storedSettings) {
 	if (storedSettings.token == "none") {
 		sendMsg("login");
 	} else {
-		var url = "http://192.168.1.5:5000/user/";
-        token = storedSettings.token;
+		var noResponse = setTimeout(function () { sendMsg("failure"); }, 3500);
+		var url = "http://192.168.1.5:5000/pi/";
+		token = storedSettings.token;
 		var bearer = 'Bearer ' + token;
 		fetch(url, {
 			method: 'GET',
@@ -175,8 +181,14 @@ function verifyToken(storedSettings) {
 				'Content-Type': 'application/json'
 			}
 		}).then(response => {
+			clearTimeout(noResponse);
 			if (response.ok) {
-				sendMsg("success");
+				logged_in = true;
+				if (response.status == "204") {
+					sendMsg("success");
+				} else {
+					sendMsg("warning");
+				}
 			} else {
 				sendMsg("failure");
 			}
@@ -185,6 +197,7 @@ function verifyToken(storedSettings) {
 }
 
 function login(info) {
+	var noResponse = setTimeout(function () { sendMsg("failure"); }, 3500);
 	fetch('http://192.168.1.5:5000/user/authenticate', {
 		method: 'POST',
 		headers: {
@@ -192,7 +205,9 @@ function login(info) {
 		},
 		body: info,
 	}).then(response => {
-		if (response.ok) {    browser.tabs.reload();
+		clearTimeout(noResponse);
+		if (response.ok) {
+			browser.tabs.reload();
 			return response.json();
 		} else {
 			return false;
@@ -204,18 +219,19 @@ function login(info) {
 			};
 			browser.storage.local.set(updatedSettings);
 
-            browser.tabs.reload();
-            verifyToken(updatedSettings);
+			browser.tabs.reload();
+			checkStatus(updatedSettings);
 		} else {
 			sendMsg("failure");
 		}
 	});
 }
 
-function sendMsg(msg){
-    browser.runtime.sendMessage({    
-      msg: msg
-    });
+
+function sendMsg(msg) {
+	browser.runtime.sendMessage({
+		msg: msg
+	});
 }
 
 // popup communication
@@ -225,10 +241,11 @@ function handleMessage(request, sender, sendResponse) {
 
 	if (request.msg == "verify token") {
 		const gettingStoredSettings = browser.storage.local.get();
-		gettingStoredSettings.then(verifyToken, onError);
+		gettingStoredSettings.then(checkStatus, onError);
 	} else {
 		login(request.msg);
 	}
+
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
@@ -371,13 +388,13 @@ function makeCC(issuer) {
 }
 
 function domain_from_url(url) {
-    var result
-    var match
-    if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
-        result = match[1]
-        if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
-            result = match[1]
-        }
-    }
-    return result
+	var result
+	var match
+	if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
+		result = match[1]
+		if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
+			result = match[1]
+		}
+	}
+	return result
 }
