@@ -12,11 +12,12 @@
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
 
-#app, body, html {
-    height: 100%;
+#app,
+body,
+html {
+  height: 100%;
 }
 #app {
- 
   font-family: "Noto Sans", sans-serif;
   display: flex;
   flex-flow: column;
@@ -41,6 +42,4 @@
 #nav a.router-link-exact-active {
   color: #f50057;
 }
-
-
 </style>

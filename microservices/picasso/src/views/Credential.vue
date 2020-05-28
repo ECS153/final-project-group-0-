@@ -1,12 +1,11 @@
 <template>
-  <div id="credentials" >
+  <div id="credential">
     <credential-list></credential-list>
     <credential-add></credential-add>
-    
-   
   </div>
 </template>
 <script>
+import "@/assets/css/views/credential.css";
 import CredentialList from "@/components/Credential/List.vue";
 import CredentialAdd from "@/components/Credential/Add.vue";
 
@@ -18,20 +17,3 @@ export default {
   }
 };
 </script>
-
-<style>
-@import "../assets/css/Credential.css";
-@import "../assets/css/reset.css";
-
-#credentials {
-
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
-}
-
-
-
-
-</style>

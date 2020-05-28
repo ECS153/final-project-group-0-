@@ -40,3 +40,6 @@ The [extension](https://github.com/ECS153/final-project-group-0-/commit/ea69b9ad
 Switching to contextmenus for the extension made it universal so it ended up being a good decision.
 The [proxy module](https://github.com/ECS153/final-project-group-0-/commit/4d4e30048ef144b3bb6ae827a1704a84f9689519) ([design doc](https://docs.google.com/document/d/19DOHn-kxQCHsZ6j-u2Ykwr2dHSKq6gtWihOWBx5ISWU/edit?usp=sharing)) was not working for url-encoded forms so I had been working on that for most of the week. It is working now.
 All websites that do not encrypt the form fields client-side are working. I am stuck on trying to see if we can do something about when fields are encrypted client side i.e before they get to our proxy as the user inputed them.
+
+### Marty
+Worked on the extension design document as well as looking into the extension compatibility for Chrome. There were significant changes in the implementation for the extension compared to the first version, so I'll continue to write up the documentation to use it as well as other clarifying documents for the repo.

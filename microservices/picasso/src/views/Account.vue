@@ -4,17 +4,12 @@
 <script>
 export default {
   name: "Account",
-  components: {
-  },
+  components: {},
   data() {
-    return { 
-    };
+    return {};
   },
-  methods: {
-  }
+  methods: {}
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
