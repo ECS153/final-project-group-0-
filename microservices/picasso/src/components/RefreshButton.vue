@@ -1,5 +1,5 @@
 <template>
-  <span><button @click="onClick" :class="{ rotate: clicked }"></button></span>
+  <span class="shadow-l"><button @click="onClick" :class="{ rotate: clicked }" ></button></span>
 </template>
 
 <script>
@@ -11,7 +11,7 @@ export default {
     };
   },
   methods: {
-    /* Add clicked attribute, and remove after 1 second */
+    //Add clicked attribute, and remove after 1 second
     onClick: function() {
       this.clicked = true;
       this.$emit("click"),

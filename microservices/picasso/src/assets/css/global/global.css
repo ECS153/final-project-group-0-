@@ -1,0 +1,68 @@
+/*******************************/
+/********* CUSTOM TYPES ********/
+/*******************************/
+.card {
+    width: 450px;
+
+    border-radius: 10px;
+    background-color: #f5f5f5;
+}
+.shadow-s {
+    margin: 10px 0 30px 0;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.19), 0 2px 4px rgba(0, 0, 0, 0.23);
+}
+.shadow-m {
+    margin: 10px 0 30px 0;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+.shadow-l {
+    margin: 10px 0 30px 0;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+.button {
+    align-self: center;
+    width: 100px;
+    height: 60px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.19), 0 2px 4px rgba(0, 0, 0, 0.23);
+}
+.title {
+    font-size: 36px;
+    font-weight: 700;
+    padding: px;
+    color: #29434e;
+}
+select {
+    outline: none;
+    box-shadow: none;
+    border: none;
+    border-bottom: solid 1px #29434e;
+    background-color: #f5f5f5;
+}
+option {
+    padding: 20px;
+    font-size: 25px;
+    color: #29434e;
+}
+
+/*******************************/
+/********** COLORS *************/
+/*******************************/
+.primary {
+    background-color: #f50057;
+}
+.primary-text {
+    color: #f50057;
+}
+.secondary {
+    background-color: #29434e;
+}
+.secondary-text {
+    background-color: #29434e;
+}
+
+
