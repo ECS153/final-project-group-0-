@@ -1,4 +1,4 @@
-# SECRET- A Secure Credential Transportor
+# SECRET- Secure Credential Transport
 
 ## Collaborators
 Martin Petrov
