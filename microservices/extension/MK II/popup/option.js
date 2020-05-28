@@ -17,14 +17,24 @@ function handleMessage(req) {
     swap_div('failure')
   } else if (req.msg == "warning") {
     swap_div('warning');
-	}
+  }
+
+  if (req.msg == "proxy_on") {
+    document.getElementById("proxy_btn").checked = true;
+  } else if (req.msg == "proxy_off") {
+    document.getElementById("proxy_btn").checked = false;
+  }
+  toggle_label();
 }
 
 browser.runtime.sendMessage({
-  msg: "verify token"
-});
+  msg: "check_status"
+}).then(function () {
+  browser.runtime.sendMessage({
+    msg: "check_proxy"
+  });
+});  
 browser.runtime.onMessage.addListener(handleMessage);
-
 
 function login() {
 
@@ -61,4 +71,28 @@ function swap_div(name) {
   } else if (name == "warning") {
     success.style.display = "block";
 	}
+}
+
+document.getElementById("proxy_btn").addEventListener("change", toggle_proxy);
+
+function toggle_proxy() {
+  if (document.getElementById("proxy_btn").checked)
+    browser.runtime.sendMessage({
+      msg: "proxy_on"
+    });
+  else {
+    browser.runtime.sendMessage({
+      msg: "proxy_off"
+    })
+  }
+  toggle_label();
+}
+
+
+function toggle_label() {
+  if (document.getElementById("proxy_btn").checked)
+    document.getElementById("proxy_label").innerHTML = "Disable proxy";
+  else {
+    document.getElementById("proxy_label").innerHTML = "Enable proxy";
+  }
 }

@@ -9,7 +9,8 @@
     "activeTab",
     "menus",
     "<all_urls>",
-    "storage"
+    "storage",
+    "proxy"
   ],
 
   "background": {

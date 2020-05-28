@@ -239,13 +239,22 @@ function handleMessage(request, sender, sendResponse) {
 	console.log("request from popup: " +
 		request.msg);
 
-	if (request.msg == "verify token") {
+	if (request.msg == "check_status") {
 		const gettingStoredSettings = browser.storage.local.get();
 		gettingStoredSettings.then(checkStatus, onError);
+	} else if (request.msg == "check_proxy") {
+		if (proxy) {
+			sendMsg("proxy_on");
+		} else {
+			sendMsg("proxy_off");
+		}
+	} else if (request.msg == "proxy_on") {
+		toggleProxy(request.msg);
+	} else if (request.msg == "proxy_off") {
+		toggleProxy(request.msg);
 	} else {
 		login(request.msg);
 	}
-
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
@@ -397,4 +406,31 @@ function domain_from_url(url) {
 		}
 	}
 	return result
+}
+
+// proxy 
+var proxy = false;
+// Listen for a request to open a webpage
+function toggleProxy(msg) {
+	if (msg == "proxy_on") {
+		browser.proxy.onRequest.addListener(handleProxyRequest, { urls: ["<all_urls>"] });
+		proxy = true;
+	} else {
+		browser.proxy.onRequest.removeListener(handleProxyRequest, { urls: ["<all_urls>"] });
+		proxy = false;
+	}
+}
+
+// On the request to open a webpage
+function handleProxyRequest(requestInfo) {
+	// Read the web address of the page to be visited 
+	const url = new URL(requestInfo.url);
+	// Determine whether the domain in the web address is on the blocked hosts list
+	if (requestInfo.method == "POST") {
+		// Write details of the proxied host to the console and return the proxy address
+		console.log(`Proxying: ${url.hostname}`);
+		return { type: "http", host: "127.0.0.1", port: 8080 };
+	}
+	// Return instructions to open the requested webpage
+	return { type: "direct" };
 }
