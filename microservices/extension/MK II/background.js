@@ -60,7 +60,7 @@ browser.menus.onClicked.addListener(async (info, tab) => {
 
 	if (type == "gen") {
 		username = makeUsername();
-		password = makeUsername();
+		password = makePassword();
 		email = makeEmail();
 		visa = makeCC("visa");
 		mastercard = makeCC("mastercard");
