@@ -5,26 +5,26 @@ var failure = document.getElementById("failure");
 var warning = document.getElementById("warning");
 
 function handleMessage(req) {
- 
+
   console.log(`Message from the background script:  ${req.msg}`);
 
   if (req.msg == "login") {
     swap_div('sign_in');
     document.getElementById("login_btn").addEventListener("click", login);
   } else if (req.msg == "success") {
-    swap_div('success')
+    swap_div('success');
   } else if (req.msg == "failure") {
-    swap_div('failure')
+    swap_div('failure');
   } else if (req.msg == "warning") {
     swap_div('warning');
-  }
-
-  if (req.msg == "proxy_on") {
+  } else if (req.msg == "proxy_on") {
     document.getElementById("proxy_btn").checked = true;
   } else if (req.msg == "proxy_off") {
     document.getElementById("proxy_btn").checked = false;
+  } else {
+    document.getElementById("pin").style.display = "block";
+    document.getElementById("pin").innerHTML = "PIN: " + req.msg;
   }
-  toggle_label();
 }
 
 browser.runtime.sendMessage({
@@ -32,8 +32,13 @@ browser.runtime.sendMessage({
 }).then(function () {
   browser.runtime.sendMessage({
     msg: "check_proxy"
+  }).then(function() {
+    browser.runtime.sendMessage({
+      msg: "check_pin"
+    });
   });
-});  
+});
+
 browser.runtime.onMessage.addListener(handleMessage);
 
 function login() {
@@ -70,7 +75,7 @@ function swap_div(name) {
     document.getElementById("login_btn").addEventListener("click", login);
   } else if (name == "warning") {
     success.style.display = "block";
-	}
+  }
 }
 
 document.getElementById("proxy_btn").addEventListener("change", toggle_proxy);
@@ -84,15 +89,5 @@ function toggle_proxy() {
     browser.runtime.sendMessage({
       msg: "proxy_off"
     })
-  }
-  toggle_label();
-}
-
-
-function toggle_label() {
-  if (document.getElementById("proxy_btn").checked)
-    document.getElementById("proxy_label").innerHTML = "Disable proxy";
-  else {
-    document.getElementById("proxy_label").innerHTML = "Enable proxy";
   }
 }

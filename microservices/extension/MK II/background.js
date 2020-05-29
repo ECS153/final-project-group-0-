@@ -33,22 +33,17 @@ function createMenus() {
 	});
 
 	browser.menus.create({
-		id: "gen",
-		title: "Generate new Tokens",
+		id: "previous",
+		title: "Previous value",
 		documentUrlPatterns: ["https://*/*", "http://*/*"],
 		contexts: ["editable"]
 	});
 }
 
-var username = makeUsername();
-var password = makePassword();
-var email = makeEmail();
-var visa = makeCC("visa");
-var mastercard = makeCC("mastercard");
-var american_express = makeCC("american express");
-var discover = makeCC("discover");
+
 var token;
 var logged_in;
+var previous = "";
 
 createMenus();
 
@@ -57,98 +52,100 @@ browser.menus.onClicked.addListener(async (info, tab) => {
 	var type = info.menuItemId;
 	await browser.browserAction.openPopup();
 
+	var value = "Please Login first";
+	var credentialType;
 
-	if (type == "gen") {
-		username = makeUsername();
-		password = makePassword();
-		email = makeEmail();
-		visa = makeCC("visa");
-		mastercard = makeCC("mastercard");
-		american_express = makeCC("american express");
-		discover = makeCC("discover");
-
-		//reload tab so as to reset everything
-		browser.tabs.reload();
-	} else {
-		var value = "Please Login first";
-		var credentialType;
-
-		if (logged_in) {
-			switch (type) {
-				case "username":
-					value = username;
-					credentialType = 2;
-					break;
-				case "password":
-					value = password;
-					credentialType = 0;
-					break;
-				case "email":
-					value = email;
-					credentialType = 3;
-					break;
-				case "visa":
-					value = visa;
-					break;
-				case "mastercard":
-					value = mastercard;
-					break;
-				case "american express":
-					value = american_express;
-					break;
-				case "discover":
-					value = discover;
-					break;
-			}
-		}
-
-		var vars = {
-			input: info.targetElementId,
-			data: value
-		};
-
-		browser.tabs.executeScript(tab.id, {
-			allFrames: true,
-			code: 'var vars = ' + JSON.stringify(vars)
-		}, function () {
-			browser.tabs.executeScript(tab.id, {
-				allFrames: true,
-				file: 'script.js'
-			});
-		});
+	if (logged_in) {
 
 		if (info.parentMenuItemId == "cc") {
 			type = "cc";
-			credentialType = 1;
 		}
 
+		switch (type) {
+			case "previous":
+				credentialType = 404;
+				value = previous;
+				break;
+			case "password":
+				credentialType = 0;
+				value = makePassword();
+				break;
+			case "cc":
+				credentialType = 1;
+				switch(info.menuItemId) {
+					case "visa":
+						value = makeCC("visa");
+						break;
+					case "mastercard":
+						value = makeCC("discover");
+						break;
+					case "american express":
+						value = makeCC("express");
+						break;
+					case "discover":
+						value = makeCC("discover");
+						break;
+				}
+				break;
+			case "username":
+				credentialType = 2;
+				value = makeUsername();
+				break;
+			case "email":
+				credentialType = 3;
+				value = makeEmail();
+				break;
+		}
+	}
+
+	previous = value;
+	var vars = {
+		input: info.targetElementId,
+		data: value
+	};
+
+	browser.tabs.executeScript(tab.id, {
+		allFrames: true,
+		code: 'var vars = ' + JSON.stringify(vars)
+	}, function () {
+		browser.tabs.executeScript(tab.id, {
+			allFrames: true,
+			file: 'script.js'
+		});
+	});
+
+	if (logged_in && credentialType != 404) {
+		new_pin = random4Digit();
+		var updatedSettings = {
+			token: token,
+			pin: new_pin
+		}
+		browser.storage.local.set(updatedSettings);
 		var json = {
 			FieldId: type,
 			RandToken: value,
 			domain: domain_from_url(tab.url),
-			type: credentialType
+			type: credentialType,
+			AuthId: eval(new_pin)
 		};
-
-		if (logged_in) {
-			var bearer = 'Bearer ' + token;
-			fetch('http://192.168.1.5:5000/browser', {
-				method: 'POST',
-				withCredentials: true,
-				credentials: 'include',
-				headers: {
-					'Authorization': bearer,
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(json)
-			});
-		}
+		var bearer = 'Bearer ' + token;
+		fetch('http://192.168.1.5:5000/browser', {
+			method: 'POST',
+			withCredentials: true,
+			credentials: 'include',
+			headers: {
+				'Authorization': bearer,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(json)
+		});
 	}
 });
 
 
 // identification credentials
 var defaultSettings = {
-	token: "none"
+	token: "none",
 };
 
 function checkStoredSettings(storedSettings) {
@@ -196,6 +193,12 @@ function checkStatus(storedSettings) {
 	}
 }
 
+function checkPin(storedSettings) {
+	if (storedSettings.pin) {
+		sendMsg(storedSettings.pin);
+	}
+}
+
 function login(info) {
 	var noResponse = setTimeout(function () { sendMsg("failure"); }, 3500);
 	fetch('http://192.168.1.5:5000/user/authenticate', {
@@ -207,7 +210,6 @@ function login(info) {
 	}).then(response => {
 		clearTimeout(noResponse);
 		if (response.ok) {
-			browser.tabs.reload();
 			return response.json();
 		} else {
 			return false;
@@ -215,11 +217,9 @@ function login(info) {
 	}).then(body => {
 		if (body) {
 			var updatedSettings = {
-				token: body.token
+				token: body.token,
 			};
 			browser.storage.local.set(updatedSettings);
-
-			browser.tabs.reload();
 			checkStatus(updatedSettings);
 		} else {
 			sendMsg("failure");
@@ -252,13 +252,15 @@ function handleMessage(request, sender, sendResponse) {
 		toggleProxy(request.msg);
 	} else if (request.msg == "proxy_off") {
 		toggleProxy(request.msg);
+	} else if (request.msg == "check_pin") {
+		const gettingStoredSettings = browser.storage.local.get();
+		gettingStoredSettings.then(checkPin, onError);
 	} else {
 		login(request.msg);
 	}
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
-
 
 // auxiliary
 function makeUsername() {
@@ -406,6 +408,15 @@ function domain_from_url(url) {
 		}
 	}
 	return result
+}
+
+function random4Digit(){
+  return shuffle( "0123456789".split('') ).join('').substring(0,4);
+}
+
+function shuffle(o){
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
 }
 
 // proxy

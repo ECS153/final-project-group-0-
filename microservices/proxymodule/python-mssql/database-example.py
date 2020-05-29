@@ -11,9 +11,9 @@ cursor = cnxn.cursor()
 #Sample select query
 ip = '192.168.1.24'
 domain = 'wikipedia.org'
-cursor.execute("SELECT RandToken, Credential FROM ProxySwaps WHERE Ip=? AND Domain=?;", ip, domain)
+cursor.execute("SELECT RandToken FROM ProxySwaps WHERE Ip=? AND Domain=?;", ip, domain)
 row = cursor.fetchone()
 
 while row:
-    print(row)
+    print(row[0])
     row = cursor.fetchone()
