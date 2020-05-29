@@ -10,7 +10,7 @@ import CredentialList from "@/components/Credential/List.vue";
 import CredentialAdd from "@/components/Credential/Add.vue";
 
 export default {
-  name: "CredentialItem",
+  name: "Credential",
   components: {
     CredentialList,
     CredentialAdd

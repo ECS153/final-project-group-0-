@@ -12,7 +12,7 @@ import 'vue-toast-notification/dist/theme-default.css';
 ////////////////////////////////
 Vue.prototype.$http = Axios;
 Vue.prototype.$apiHeaders = {
-  "Authorization": "BEARER " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTU5MDYzMzgwNCwiZXhwIjoxNTkwNzIwMjA0LCJpYXQiOjE1OTA2MzM4MDR9.NG70KVdlDxSY_tKubcIxv954o-Gp-OdDNY-H6yxjF0U",
+  "Authorization": "BEARER " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjQiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTU5MDcxODc2NywiZXhwIjoxNTkwODA1MTY3LCJpYXQiOjE1OTA3MTg3Njd9.GQve9FmXvxZHX3F8mP1OjZEcrEYtDEcdprNeowGYK-o",
   "Content-Type": "application/json"
 },
 
