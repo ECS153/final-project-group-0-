@@ -408,7 +408,7 @@ function domain_from_url(url) {
 	return result
 }
 
-// proxy 
+// proxy
 var proxy = false;
 // Listen for a request to open a webpage
 function toggleProxy(msg) {
@@ -423,13 +423,13 @@ function toggleProxy(msg) {
 
 // On the request to open a webpage
 function handleProxyRequest(requestInfo) {
-	// Read the web address of the page to be visited 
+	// Read the web address of the page to be visited
 	const url = new URL(requestInfo.url);
 	// Determine whether the domain in the web address is on the blocked hosts list
 	if (requestInfo.method == "POST") {
 		// Write details of the proxied host to the console and return the proxy address
 		console.log(`Proxying: ${url.hostname}`);
-		return { type: "http", host: "127.0.0.1", port: 8080 };
+		return { type: "http", host: "192.168.1.24", port: 8080 };
 	}
 	// Return instructions to open the requested webpage
 	return { type: "direct" };
