@@ -426,7 +426,7 @@ function handleProxyRequest(requestInfo) {
 	// Read the web address of the page to be visited
 	const url = new URL(requestInfo.url);
 	// Determine whether the domain in the web address is on the blocked hosts list
-	if (requestInfo.method == "POST") {
+	if (requestInfo.method == "POST" && url.hostname != "192.168.1.5") {
 		// Write details of the proxied host to the console and return the proxy address
 		console.log(`Proxying: ${url.hostname}`);
 		return { type: "http", host: "192.168.1.24", port: 8080 };
