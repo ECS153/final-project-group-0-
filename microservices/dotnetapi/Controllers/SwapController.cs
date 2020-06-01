@@ -27,8 +27,8 @@ namespace dotnetapi.Controllers
         ////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////// Request Methods //////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
-        [HttpPost]
-        public IActionResult Index([FromBody] BrowserSubmitRequestModel model)
+        [HttpPost("new")]
+        public IActionResult New([FromBody] SubmitRequestModel model)
         {
             // Grab BrowserRequestSwapModel model, and map it to a RequestSwapModel
             var ReqSwap = _mapper.Map<RequestSwap>(model);
@@ -36,7 +36,7 @@ namespace dotnetapi.Controllers
             // Fill in user IP addr as well as UserId, and call the RequestModel Service
             ReqSwap.Ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             ReqSwap.UserId = int.Parse(User.Identity.Name); 
-            _swapService.Create(ReqSwap);
+            _swapService.Enqueue(ReqSwap);
             
             return Ok();
         }
@@ -45,8 +45,8 @@ namespace dotnetapi.Controllers
         public IActionResult GetHead()
         {
             var userId = int.Parse(User.Identity.Name);
-            var reqSwap = _swapService.GetTop(userId);
-            return Ok(_mapper.Map<PiRequestSwapModel>(reqSwap));
+            var reqSwap = _swapService.Front(userId);
+            return Ok(_mapper.Map<RequestSwapModel>(reqSwap));
         }
 
         [HttpDelete]
@@ -54,21 +54,20 @@ namespace dotnetapi.Controllers
         {
             var userId = int.Parse(User.Identity.Name);
             try {
-                _swapService.DeleteTop(userId);
+                _swapService.Dequeue(userId);
                 return Ok();
             }
             catch(AppException ex) {
                 return BadRequest(new { Title = ex.Message });
             }
-           
         }
 
         [HttpPost]
-        public IActionResult Submit([FromBody]PiSubmitSwapModel model)
+        public IActionResult Submit([FromBody]SubmitSwapModel model)
         {
             try {
                 var userId = int.Parse(User.Identity.Name);
-                _swapService.Swap(model, userId);
+                _swapService.Swap(model.CredentialId, userId);
                 return Ok();
             }
             catch (AppException ex) {

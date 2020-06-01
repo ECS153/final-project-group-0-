@@ -56,7 +56,7 @@ namespace dotnetapi
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
                         var userId = int.Parse(context.Principal.Identity.Name);
-                        var user = userService.GetById(userId);
+                        var user = userService.Read(userId);
                         if (user == null)
                         {
                             // return unauthorized if user no longer exists

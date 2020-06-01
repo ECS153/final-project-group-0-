@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
+using dotnetapi.Entities;
 using dotnetapi.Helpers;
 using dotnetapi.Models.Credentials;
 using dotnetapi.Services;
@@ -15,9 +16,12 @@ namespace dotnetapi.Controllers
     public class CredentialController : ControllerBase
     {
         private ICredentialService _service;
-        public CredentialController(ICredentialService service)
+        private IMapper _mapper;
+        
+        public CredentialController(ICredentialService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
         
         [HttpPost("new")]
@@ -25,7 +29,7 @@ namespace dotnetapi.Controllers
         {
             int userId = int.Parse(User.Identity.Name);             
             try {
-                _service.Create(model, userId);
+                _service.Create(_mapper.Map<Credential>(model), userId);
                 return Ok();
             }
             catch (AppException e) {
@@ -37,8 +41,8 @@ namespace dotnetapi.Controllers
         public IActionResult Read([FromQuery]CredentialReadModel model)
         {
             int userId = int.Parse(User.Identity.Name); 
-            List<CredentialReadModel> credentials = _service.Read(model, userId);
-            
+            var credentials = _mapper.Map<List<CredentialReadModel>>(_service.Read(_mapper.Map<Credential>(model), userId));
+        
             return Ok(credentials);
         }
 
@@ -47,7 +51,7 @@ namespace dotnetapi.Controllers
         {
             int userId = int.Parse(User.Identity.Name);
             try {
-                _service.Update(model, userId);
+                _service.Update(_mapper.Map<Credential>(model), userId);
                 return Ok();
             }
             catch (AppException e) {
@@ -60,7 +64,7 @@ namespace dotnetapi.Controllers
         {
             int userId = int.Parse(User.Identity.Name);
             try {
-                _service.Delete(model, userId);
+                _service.Delete(_mapper.Map<Credential>(model), userId);
                 return Ok();
             }
             catch (AppException e) {
@@ -71,3 +75,4 @@ namespace dotnetapi.Controllers
 
 
 }
+

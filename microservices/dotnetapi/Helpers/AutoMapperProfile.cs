@@ -23,8 +23,8 @@ namespace dotnetapi.Helpers
             CreateMap<Credential, CredentialReadModel>();
 
             // Swap Maps
-            CreateMap<BrowserSubmitRequestModel, RequestSwap>();
-            CreateMap<RequestSwap, PiRequestSwapModel>();
+            CreateMap<SubmitRequestModel, RequestSwap>();
+            CreateMap<RequestSwap, RequestSwapModel>();
         }
     }
 }

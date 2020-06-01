@@ -1,4 +1,4 @@
-using AutoMapper;
+
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -13,23 +13,22 @@ namespace dotnetapi.Services
     public interface IUserService
     {
         User Authenticate(UserAuthenticateModel model);
-        IEnumerable<User> GetAll();
-        UserReadModel GetById(int id);
-        UserReadModel Create(UserCreateModel model, string Role);
-        void Update(UserUpdateModel model);
+        IEnumerable<User> ReadAll();
+        User Create(User model, string password, string Role);
+        User Read(int id);
+        void Update(User model, string password);
         void Delete(int id);
     }
 
     public class UserService : IUserService
     {
         private DatabaseContext _context;
-        private IMapper _mapper;
+       
         private readonly AppSettings _appSettings;
 
-        public UserService(DatabaseContext context, IMapper mapper, IOptions<AppSettings> appSettings)
+        public UserService(DatabaseContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
-            _mapper = mapper;
             _appSettings = appSettings.Value;
         }
 
@@ -45,41 +44,40 @@ namespace dotnetapi.Services
             return user;
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<User> ReadAll()
         {
             return _context.Users;
         }
 
-        public UserReadModel GetById(int id)
+        public User Read(int id)
         {
-            return _mapper.Map<UserReadModel>(_context.Users.Find(id));
+            return _context.Users.Find(id);
         }
 
-        public UserReadModel Create(UserCreateModel model, string Role)
+        public User Create(User user, string password, string role)
         {
-            if (string.IsNullOrWhiteSpace(model.Password))
+            if (string.IsNullOrWhiteSpace(password))
                 throw new AppException("Password is required");
 
-            if (_context.Users.Any(x => x.Username == model.Username))
-                throw new AppException("Username \"" + model.Username + "\" is already taken");
+            if (_context.Users.Any(x => x.Username == user.Username))
+                throw new AppException("Username \"" + user.Username + "\" is already taken");
 
-            var user = _mapper.Map<User>(model);
+            //var user = _mapper.Map<User>(model);
             byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(model.Password, out passwordHash, out passwordSalt);
-            user.Role = Role;
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            user.Role = role;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            return _mapper.Map<UserReadModel>(user);
+            return user;
         }
 
-        public void Update(UserUpdateModel model)
+        public void Update(User model, string password)
         {
             var user = _context.Users.Find(model.Id);
-
             if (user == null)
                 throw new AppException("User not found");
 
@@ -101,10 +99,10 @@ namespace dotnetapi.Services
                 user.LastName = model.LastName;
 
             // update password if provided
-            if (!string.IsNullOrWhiteSpace(model.Password))
+            if (!string.IsNullOrWhiteSpace(password))
             {
                 byte[] passwordHash, passwordSalt;
-                CreatePasswordHash(model.Password, out passwordHash, out passwordSalt);
+                CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
@@ -123,6 +121,9 @@ namespace dotnetapi.Services
             }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////
+        //////////////////////// Private Helper Functions //////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             if (password == null) throw new ArgumentNullException("password");

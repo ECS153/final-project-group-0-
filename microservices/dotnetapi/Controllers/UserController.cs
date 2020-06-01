@@ -21,11 +21,13 @@ namespace dotnetapi.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _userService;
+        private IMapper _mapper;
         private readonly AppSettings _AppSettings;
 
-        public UserController(IUserService userService, IOptions<AppSettings> appSettings)
+        public UserController(IUserService userService, IMapper mapper, IOptions<AppSettings> appSettings)
         {
             _userService = userService;
+            _mapper = mapper;
             _AppSettings = appSettings.Value;
         }
 
@@ -57,12 +59,12 @@ namespace dotnetapi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("register")]
-        public IActionResult Register([FromBody]UserCreateModel model)
+        [HttpPost("new")]
+        public IActionResult New([FromBody]UserCreateModel model)
         {
             try
             {
-                _userService.Create(model, "User");
+                _userService.Create(_mapper.Map<User>(model), model.Password, "User");
                 return Ok();
             }
             catch (AppException ex)
@@ -71,24 +73,24 @@ namespace dotnetapi.Controllers
             }
         }
 
-        [HttpGet("")]
+        [HttpGet]
         public IActionResult Read()
         {
             var currentUserId = int.Parse(User.Identity.Name);
-            var user =  _userService.GetById(currentUserId);            
+            var user =  _userService.Read(currentUserId);            
             if (user == null)
                 return NotFound();
 
             return Ok(user);
         }
 
-        [HttpPut("")]
+        [HttpPost]
         public IActionResult Update([FromBody]UserUpdateModel model)
         {   
             model.Id = int.Parse(User.Identity.Name);
 
             try {
-                _userService.Update(model);
+                _userService.Update(_mapper.Map<User>(model), model.Password);
                 return Ok();
             }
             catch (AppException ex) {

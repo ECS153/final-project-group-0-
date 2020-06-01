@@ -12,64 +12,63 @@ namespace dotnetapi.Services
 {
     public interface ICredentialService
     {
-        CredentialCreateModel Create(CredentialCreateModel model, int userId);
-        List<CredentialReadModel> Read(CredentialReadModel model, int userId);
-        void Update(CredentialUpdateModel model, int userId);
-        void Delete(CredentialDeleteModel model, int userId);
+        Credential Create(Credential model, int userId);
+        List<Credential> Read(Credential model, int userId);
+        void Update(Credential model, int userId);
+        void Delete(Credential model, int userId);
     }
 
     public class CredentialService: ICredentialService
     {
         private DatabaseContext _context;
-        private IMapper _mapper;
 
-        public CredentialService(DatabaseContext context, IMapper mapper)
+
+        public CredentialService(DatabaseContext context)
         {
-            _mapper = mapper;
             _context = context;
         }
-        public CredentialCreateModel Create(CredentialCreateModel model, int userId) 
+
+        public Credential Create(Credential cred, int userId) 
         {
             var curUser = _context.Users.Include(x => x.Credentials).First(u => u.Id == userId);
             
-            if (curUser.Credentials.Any(x => x.Hint == model.Hint)) {
+            if (curUser.Credentials.Any(x => x.Hint == cred.Hint)) {
                 throw new AppException("This credential hint is already used by another of your credentials");
             }
-            var cred = _mapper.Map<Credential>(model);
-            cred.ValueHash = model.Value;
-            cred.Domain = model.Domain.ToLower();
+          
+            cred.Domain = cred.Domain.ToLower();
             curUser.Credentials.Add(cred);
             _context.SaveChanges();
 
-            return model;
+            return cred;
         }
-        public List<CredentialReadModel> Read(CredentialReadModel model, int userId)
-        {
-            var curUser = _context.Users.Include(x => x.Credentials).First(u => u.Id == userId);
-          
-            var creds = curUser.Credentials.Where(x => ( (model.Domain == null || (x.Domain == model.Domain || x.Domain == ""))
-                                                      && (model.Hint == null   || x.Hint == model.Hint)
-                                                      && (model.Id == null     || x.Id == model.Id)
-                                                      && (model.Type == null   || x.Type == model.Type)
-                                                      )).AsEnumerable();
 
-            var tmp = _mapper.Map<List<CredentialReadModel>>(creds);
-            return tmp.ToList();
+        public List<Credential> Read(Credential cred, int userId)
+        {
+            var curUser = _context.Users.Include(c => c.Credentials).First(u => u.Id == userId);
+          
+            var creds = curUser.Credentials.Where(c => ( (cred.Domain == null || (c.Domain == cred.Domain || c.Domain == ""))
+                                                      && (cred.Hint == null   || c.Hint == cred.Hint)
+                                                      && (c.Id == cred.Id)
+                                                      && (cred.Type == null   || c.Type == cred.Type)
+                                                      )).AsEnumerable();
+            return creds.ToList();
         }
-        public void Update(CredentialUpdateModel model, int userId)
+
+        public void Update(Credential cred, int userId)
         {
             var user = _context.Users.Include(x => x.Credentials).First(u => u.Id == userId);
             try {
-                var credential = user.Credentials.First(x => x.Id == model.Id);
+                var credential = user.Credentials.First(x => x.Id == cred.Id);
 
-                if (model.Domain != null) {
-                    credential.Domain = model.Domain.ToLower();
+                if (cred.Domain != null) {
+                    credential.Domain = cred.Domain.ToLower();
                 }   
-                if (model.Hint != null) {
-                    credential.Hint = model.Hint;
+                if (cred.Hint != null) {
+                    credential.Hint = cred.Hint;
                 }
-                if (model.Type != null) {
-                    credential.Type = model.Type;
+                if (cred.Type != null) {
+                    credential.Type = cred.Type;
                 }
                 _context.Users.Update(user);
                 _context.SaveChanges();
@@ -77,11 +76,12 @@ namespace dotnetapi.Services
                 throw new AppException("None of your credentials have this Id");
             }
         }
-        public void Delete(CredentialDeleteModel model, int userId)
+
+        public void Delete(Credential cred, int userId)
         {
             var user = _context.Users.Include(x => x.Credentials).First(u => u.Id == userId);
             try {
-                user.Credentials.Remove(user.Credentials.First(x => x.Id == model.Id));
+                user.Credentials.Remove(user.Credentials.First(x => x.Id == cred.Id));
                 _context.Users.Update(user);
                 _context.SaveChanges();
 

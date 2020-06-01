@@ -9,7 +9,6 @@ using System.Linq;
 
 using dotnetapi.Entities;
 using dotnetapi.Helpers;
-using dotnetapi.Models.Requests;
 
 namespace dotnetapi.Services
 {
@@ -18,7 +17,7 @@ namespace dotnetapi.Services
         void Dequeue(int userId);
         void Enqueue(RequestSwap reqSwap);
         RequestSwap Front(int userId);
-        void Swap(PiSubmitSwapModel model, int userId);
+        void Swap(int? credId, int userId);
     }
     public class SwapService : ISwapService
     {
@@ -63,17 +62,18 @@ namespace dotnetapi.Services
             }
         }
 
-        public void Swap(PiSubmitSwapModel model, int userId)
+        public void Swap(int? credId, int userId)
         {
             // Find user by Id
             User user = findUser(userId);
 
             // Verify that the credential is allowed to be used
-            var userCred = user.Credentials.FirstOrDefault(c => c.Id == model.CredentialId);
+            var userCred = user.Credentials.FirstOrDefault(c => c.Id == credId);
             if (userCred == null) {
                 throw new AppException("User does not have a credential with this ID");
             }
-            var reqSwap = user.RequestSwaps.FirstOrDefault(r => r.Id == model.SwapId);
+            // Get user's top requestswap
+            var reqSwap = Front(userId);
             if (reqSwap == null) {
                 throw new AppException("User does not have any pending Request Swaps with this Id");
             }

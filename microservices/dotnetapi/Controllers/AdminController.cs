@@ -1,8 +1,10 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 using dotnetapi.Models.Users;
+using dotnetapi.Entities;
 using dotnetapi.Helpers;
 using dotnetapi.Services;
 
@@ -14,20 +16,22 @@ namespace WebApi.Controllers
     public class AdminController : ControllerBase
     {
         private IUserService _userService;
+        private IMapper _mapper;
         private readonly AppSettings _AppSettings;
 
-        public AdminController(IUserService userService, IOptions<AppSettings> appSettings)
+        public AdminController(IUserService userService, IMapper mapper ,IOptions<AppSettings> appSettings)
         {
             _userService = userService;
+            _mapper = mapper;
             _AppSettings = appSettings.Value;
         }
 
-        [HttpPost("register")]
+        [HttpPost("new")]
         public IActionResult RegisterAdmin([FromBody]UserCreateModel model)
         {
             try
             {
-                _userService.Create(model, "Admin");
+                _userService.Create(_mapper.Map<User>(model), model.Password, "Admin");
                 return Ok();
             }
             catch (AppException ex)
@@ -39,14 +43,14 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users = _userService.GetAll();
+            var users = _userService.ReadAll();
             return Ok(users);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var user =  _userService.GetById(id);
+            var user =  _userService.Read(id);
             if (user == null) {
                 return NotFound();
             }
@@ -58,7 +62,7 @@ namespace WebApi.Controllers
         {
             model.Id = id;
             try {
-                _userService.Update(model);
+                _userService.Update(_mapper.Map<User>(model), model.Password);
                 return Ok();
             }
             catch (AppException ex) {
