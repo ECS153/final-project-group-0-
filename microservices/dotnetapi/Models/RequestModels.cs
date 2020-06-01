@@ -5,7 +5,10 @@ namespace dotnetapi.Models.Requests
     public class BrowserSubmitRequestModel 
     {
         [Required]
-        public string FieldId { get; set; }    
+        public string FieldId { get; set; }  
+        [Required]
+        [Range(0,9999)]
+        public int? AuthId { get; set; }  
         [Required]
         public string Domain { get; set; }
         [Required]
@@ -18,6 +21,9 @@ namespace dotnetapi.Models.Requests
         public int? Id { get; set; }
         [Required]
         public string FieldId { get; set; }
+        [Required]
+        [Range(0,9999)]
+        public int? AuthId { get; set; }  
         [Required]
         public string Domain { get; set; }
         public int? Type {get; set; }

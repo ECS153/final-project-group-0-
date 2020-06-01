@@ -32,7 +32,7 @@ namespace WebApi.Controllers
             }
             catch (AppException ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new { title = ex.Message });
             }
         }
 

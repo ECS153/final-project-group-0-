@@ -29,7 +29,7 @@ namespace dotnetapi.Controllers
                 return Ok();
             }
             catch (AppException e) {
-                return BadRequest(new {message = e.Message});
+                return BadRequest(new {Title = e.Message});
             }
         }
 
@@ -51,7 +51,7 @@ namespace dotnetapi.Controllers
                 return Ok();
             }
             catch (AppException e) {
-                return BadRequest(new {message = e.Message});
+                return BadRequest(new {Title = e.Message});
             }
         }
 
@@ -64,7 +64,7 @@ namespace dotnetapi.Controllers
                 return Ok();
             }
             catch (AppException e) {
-                return BadRequest(new {message = e.Message});
+                return BadRequest(new {Title = e.Message});
             }
         }
     }

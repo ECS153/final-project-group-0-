@@ -85,6 +85,7 @@ namespace dotnetapi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISwapService, SwapService>();
             services.AddScoped<ICredentialService, CredentialService>();
+            services.AddScoped<ILogService, LogService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

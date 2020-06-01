@@ -37,6 +37,7 @@ namespace dotnetapi.Services
             }
             var cred = _mapper.Map<Credential>(model);
             cred.ValueHash = model.Value;
+            cred.Domain = model.Domain.ToLower();
             curUser.Credentials.Add(cred);
             _context.SaveChanges();
 
@@ -46,7 +47,7 @@ namespace dotnetapi.Services
         {
             var curUser = _context.Users.Include(x => x.Credentials).First(u => u.Id == userId);
           
-            var creds = curUser.Credentials.Where(x => ( (model.Domain == null || x.Domain == model.Domain)
+            var creds = curUser.Credentials.Where(x => ( (model.Domain == null || (x.Domain == model.Domain || x.Domain == ""))
                                                       && (model.Hint == null   || x.Hint == model.Hint)
                                                       && (model.Id == null     || x.Id == model.Id)
                                                       && (model.Type == null   || x.Type == model.Type)
@@ -62,7 +63,7 @@ namespace dotnetapi.Services
                 var credential = user.Credentials.First(x => x.Id == model.Id);
 
                 if (model.Domain != null) {
-                    credential.Domain = model.Domain;
+                    credential.Domain = model.Domain.ToLower();
                 }   
                 if (model.Hint != null) {
                     credential.Hint = model.Hint;

@@ -67,7 +67,7 @@ namespace dotnetapi.Controllers
             }
             catch (AppException ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new { Title = ex.Message });
             }
         }
 
@@ -92,7 +92,7 @@ namespace dotnetapi.Controllers
                 return Ok();
             }
             catch (AppException ex) {
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new { Title = ex.Message });
             }
         }
     }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnetapi.Entities;
 
 namespace dotnetapi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200529044732_Time")]
+    partial class Time
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,29 +50,6 @@ namespace dotnetapi.Migrations
                     b.ToTable("Credential");
                 });
 
-            modelBuilder.Entity("dotnetapi.Entities.EventLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("EventLog");
-                });
-
             modelBuilder.Entity("dotnetapi.Entities.ProxySwap", b =>
                 {
                     b.Property<int>("Id")
@@ -93,9 +72,6 @@ namespace dotnetapi.Migrations
                     b.Property<string>("RandToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("ProxySwaps");
@@ -107,9 +83,6 @@ namespace dotnetapi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("AuthId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Domain")
                         .HasColumnType("nvarchar(max)");
@@ -170,13 +143,6 @@ namespace dotnetapi.Migrations
                 {
                     b.HasOne("dotnetapi.Entities.User", null)
                         .WithMany("Credentials")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("dotnetapi.Entities.EventLog", b =>
-                {
-                    b.HasOne("dotnetapi.Entities.User", null)
-                        .WithMany("Logs")
                         .HasForeignKey("UserId");
                 });
 
