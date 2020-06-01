@@ -1,9 +1,9 @@
 <template>
   <div id="home">
-    <transition name="slide-fade" mode="out-in">
+    
       <refresh-button v-if="requestSwap == null" @click="refresh"></refresh-button>
       <swap-form v-else :swapProps="requestSwap" @submit="requestSwap = null"></swap-form>
-    </transition>
+
   </div>
 </template>
 

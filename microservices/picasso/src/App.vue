@@ -29,7 +29,7 @@ html {
   align-self: flex-end;
 
   margin: 0;
-  padding: 15px 30px 0 15px;
+  padding: 45px 30px 0 15px;
   display: flex;
   flex-flow: row;
   justify-content: flex-end;

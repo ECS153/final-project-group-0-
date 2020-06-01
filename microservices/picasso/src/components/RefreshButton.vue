@@ -45,7 +45,7 @@ span {
   border-radius: 100%;
 }
 .rotate {
-  transform: rotate(720deg);
+  transform: rotate(720deg) translate3d(0,0,0);
   transition: all 1s ease-in-out;
 }
 </style>
