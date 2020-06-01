@@ -1,5 +1,6 @@
 <template>
   <div class="card shadow-m">
+    <h2 class="primary-text" id="authId">{{ swapProps.authId }}</h2>
     <h2 class="primary-text"><span class="title">Domain: </span>{{ swapProps.domain }}</h2>
     <h2 class="primary-text"><span class="title">Field-Id: </span>{{ swapProps.fieldId }}</h2>
     <select v-model="selectedCred" id="creds">
@@ -76,6 +77,12 @@ export default {
 </script>
 
 <style scoped>
+
+#authId {
+  font-size: 48px;
+  align-self: center;
+}
+
 div {
   width: 400px;
   height: 300px;

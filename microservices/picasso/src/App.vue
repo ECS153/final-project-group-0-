@@ -1,8 +1,9 @@
 <template>
-  <div id="app">
+  <div id="app">  
     <div id="nav">
       <router-link to="/">Home</router-link>
-      <router-link to="/credential">Credentials </router-link>
+      <router-link to="/credentials">Credentials </router-link>
+      <router-link to="/logs">Logs</router-link>
       <router-link to="/account">Account</router-link>
     </div>
     <router-view />
@@ -25,8 +26,9 @@ html {
   align-items: center;
 }
 #nav {
-  width: 100%;
-  height: 30px;
+  align-self: flex-end;
+
+  margin: 0;
   padding: 15px 30px 0 15px;
   display: flex;
   flex-flow: row;

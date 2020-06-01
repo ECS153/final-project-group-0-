@@ -2,7 +2,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Settings from "../views/Account.vue";
-import Credential from "../views/Credential.vue";
+import Credentials from "../views/Credentials.vue";
+import Logs from "../views/Logs.vue";
 
 Vue.use(VueRouter);
 
@@ -18,9 +19,14 @@ const routes = [
     component: Settings
   },
   {
-    path: "/credential",
-    name: "Credential",
-    component: Credential
+    path: "/credentials",
+    name: "Credentials",
+    component: Credentials
+  },
+  {
+    path: "/logs",
+    name: "Logs",
+    component: Logs
   }
 ];
 

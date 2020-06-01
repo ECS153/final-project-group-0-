@@ -1,5 +1,5 @@
 <template>
-  <div id="credential">
+  <div id="credentials">
     <credential-list></credential-list>
     <credential-add></credential-add>
   </div>
@@ -10,7 +10,7 @@ import CredentialList from "@/components/Credential/List.vue";
 import CredentialAdd from "@/components/Credential/Add.vue";
 
 export default {
-  name: "Credential",
+  name: "Credentials",
   components: {
     CredentialList,
     CredentialAdd
