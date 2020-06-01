@@ -43,3 +43,5 @@ All websites that do not encrypt the form fields client-side are working. I am s
 
 ### Marty
 Worked on the extension design document as well as looking into the extension compatibility for Chrome. There were significant changes in the implementation for the extension compared to the first version, so I'll continue to write up the documentation to use it as well as other clarifying documents for the repo.
+
+### [Video](https://youtu.be/WPyAVHH3of8)
