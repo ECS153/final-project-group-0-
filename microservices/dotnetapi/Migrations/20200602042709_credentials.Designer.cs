@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnetapi.Entities;
 
 namespace dotnetapi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200602042709_credentials")]
+    partial class credentials
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,7 +131,9 @@ namespace dotnetapi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RequestSwaps");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestSwap");
                 });
 
             modelBuilder.Entity("dotnetapi.Entities.User", b =>
@@ -169,6 +173,13 @@ namespace dotnetapi.Migrations
                 {
                     b.HasOne("dotnetapi.Entities.User", null)
                         .WithMany("Logs")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("dotnetapi.Entities.RequestSwap", b =>
+                {
+                    b.HasOne("dotnetapi.Entities.User", null)
+                        .WithMany("RequestSwaps")
                         .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618

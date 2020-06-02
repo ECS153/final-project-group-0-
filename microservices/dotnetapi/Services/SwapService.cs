@@ -30,17 +30,13 @@ namespace dotnetapi.Services
 
         public void Dequeue(int userId)
         {
-            // Find user by Id
-            User user = findUser(userId);
-
             // Find user's first RequestSwap, order by RequestSwap.Id
-            if (user.RequestSwaps.Any()) {
-                var topReq = user.RequestSwaps.OrderBy(r => r.Id).FirstOrDefault();
-                user.RequestSwaps.Remove(topReq);
-                _context.SaveChanges();
-            } else {
+            var topReq = _context.RequestSwaps.OrderBy(r => r.Id).FirstOrDefault(r => r.UserId == userId);
+            if (topReq == null) {
                 throw new AppException("User has no pending Request Swaps");
             }
+            _context.RequestSwaps.Remove(topReq);
+            _context.SaveChanges();            
         } 
  
         public void Enqueue(RequestSwap reqSwap)
@@ -51,24 +47,14 @@ namespace dotnetapi.Services
 
         public RequestSwap Front(int userId)
         {
-            // Find user by Id
-            User user = findUser(userId);
-
-            // Find user's first RequestSwap, order by RequestSwap.Id, If User has no requests swaps, return null
-            if (user.RequestSwaps.Any()) {
-                return user.RequestSwaps.OrderBy(r => r.Id).FirstOrDefault();
-            } else {
-                return null;
-            }
+            RequestSwap topReq = _context.RequestSwaps.OrderBy(r => r.Id).FirstOrDefault(r => r.UserId == userId);
+            return topReq;
         }
 
         public void Swap(int? credId, int userId)
         {
-            // Find user by Id
-            User user = findUser(userId);
-
             // Verify that the credential is allowed to be used
-            var userCred = user.Credentials.FirstOrDefault(c => c.Id == credId);
+            var userCred = _context.Credentials.FirstOrDefault(c => c.Id == credId && c.UserId == userId);
             if (userCred == null) {
                 throw new AppException("User does not have a credential with this ID");
             }
@@ -91,21 +77,10 @@ namespace dotnetapi.Services
  
             // Add to ProxySwap Database, remove from RequestSwap Database
             _context.ProxySwaps.Add(proxySwap);
-            user.RequestSwaps.Remove(reqSwap);
+            _context.RequestSwaps.Remove(reqSwap);
             _context.SaveChanges();
         }
     
-        ////////////////////////////////////////////////////////////////////////////////
-        //////////////////////// Private Helper Functions //////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////
-        private User findUser(int userId)
-        {
-            // Find user by Id
-            var user = _context.Users.Include(u => u.Credentials).Include(r => r.RequestSwaps).FirstOrDefault(u => u.Id == userId);
-            if (user == null) {
-                throw new AppException("No Users with this ID have been found");
-            }
-            return user;
-        }
+
     }
 }

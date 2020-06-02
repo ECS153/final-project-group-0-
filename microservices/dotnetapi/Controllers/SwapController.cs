@@ -30,12 +30,12 @@ namespace dotnetapi.Controllers
         [HttpPost("new")]
         public IActionResult New([FromBody] SubmitRequestModel model)
         {
-            // Grab BrowserRequestSwapModel model, and map it to a RequestSwapModel
+            int userId = int.Parse(User.Identity.Name);
             var ReqSwap = _mapper.Map<RequestSwap>(model);
-
-            // Fill in user IP addr as well as UserId, and call the RequestModel Service
+            
+            ReqSwap.UserId = userId; 
             ReqSwap.Ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            ReqSwap.UserId = int.Parse(User.Identity.Name); 
+            
             _swapService.Enqueue(ReqSwap);
             
             return Ok();
@@ -57,8 +57,8 @@ namespace dotnetapi.Controllers
                 _swapService.Dequeue(userId);
                 return Ok();
             }
-            catch(AppException ex) {
-                return BadRequest(new { Title = ex.Message });
+            catch(AppException e) {
+                return BadRequest(new { Title = e.Message });
             }
         }
 
@@ -70,8 +70,8 @@ namespace dotnetapi.Controllers
                 _swapService.Swap(model.CredentialId, userId);
                 return Ok();
             }
-            catch (AppException ex) {
-                return BadRequest(new { Title = ex.Message });
+            catch (AppException e) {
+                return BadRequest(new { Title = e.Message });
             }
         }
 

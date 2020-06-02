@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -64,8 +65,8 @@ namespace dotnetapi.Controllers
         {
             try
             {
-                _userService.Create(_mapper.Map<User>(model), model.Password, "User");
-                return Ok();
+                string privateKey = _userService.Create(_mapper.Map<User>(model), model.Password, "User");
+                return Ok(privateKey);
             }
             catch (AppException ex)
             {
@@ -96,6 +97,16 @@ namespace dotnetapi.Controllers
             catch (AppException ex) {
                 return BadRequest(new { Title = ex.Message });
             }
+        }
+
+
+        private static string GetKeyString(RSAParameters publicKey)
+        {
+
+            var stringWriter = new System.IO.StringWriter();
+            var xmlSerializer = new System.Xml.Serialization.XmlSerializer(typeof(RSAParameters));
+            xmlSerializer.Serialize(stringWriter, publicKey);
+            return stringWriter.ToString();
         }
     }
 }

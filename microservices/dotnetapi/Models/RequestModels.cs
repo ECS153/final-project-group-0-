@@ -20,10 +20,10 @@ namespace dotnetapi.Models.Requests
     {
         public int? Id { get; set; }
         [Required]
-        public string FieldId { get; set; }
-        [Required]
         [Range(0,9999)]
-        public int? AuthId { get; set; }  
+        public int? AuthId { get; set; } 
+        [Required]
+        public string FieldId { get; set; }
         [Required]
         public string Domain { get; set; }
         public int? Type {get; set; }

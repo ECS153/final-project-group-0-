@@ -11,6 +11,7 @@ namespace dotnetapi.Entities
     public class Credential
     {
         public int Id { get; set; }
+        public int UserId {get; set; }
         public int? Type { get; set; }
         public string Hint { get; set; }
         public string ValueHash { get; set; }

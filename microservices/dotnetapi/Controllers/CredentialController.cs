@@ -1,7 +1,10 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 
 using dotnetapi.Entities;
 using dotnetapi.Helpers;
@@ -15,21 +18,27 @@ namespace dotnetapi.Controllers
     [Route("[controller]")]
     public class CredentialController : ControllerBase
     {
-        private ICredentialService _service;
+        private ICredentialService _credService;
+        private IUserService _userService;
         private IMapper _mapper;
 
-        public CredentialController(ICredentialService service, IMapper mapper)
+        public CredentialController(ICredentialService credService, IUserService userService, IMapper mapper)
         {
-            _service = service;
+            _userService = userService;
+            _credService = credService;
             _mapper = mapper;
         }
         
         [HttpPost("new")]
         public IActionResult Create([FromBody]CredentialCreateModel model) 
         {
-            int userId = int.Parse(User.Identity.Name);             
+            User user = _userService.Read(int.Parse(User.Identity.Name));   
+            Credential cred = _mapper.Map<Credential>(model);
+            cred.UserId = user.Id;   
+
             try {
-                _service.Create(_mapper.Map<Credential>(model), userId);
+                cred.ValueHash = Encrypt(model.Value, user.PublicCredKey);
+                _credService.Create(cred);
                 return Ok();
             }
             catch (AppException e) {
@@ -41,7 +50,9 @@ namespace dotnetapi.Controllers
         public IActionResult Read([FromQuery]CredentialReadModel model)
         {
             int userId = int.Parse(User.Identity.Name); 
-            var credentials = _mapper.Map<List<CredentialReadModel>>(_service.Read(_mapper.Map<Credential>(model), userId));
+            Credential cred = _mapper.Map<Credential>(model);
+            cred.UserId = userId;
+            var credentials = _mapper.Map<List<CredentialReadModel>>(_credService.Read(cred));
         
             return Ok(credentials);
         }
@@ -50,8 +61,11 @@ namespace dotnetapi.Controllers
         public IActionResult Update([FromBody]CredentialUpdateModel model)
         {
             int userId = int.Parse(User.Identity.Name);
+            Credential cred = _mapper.Map<Credential>(model);
+            cred.UserId = userId;
+
             try {
-                _service.Update(_mapper.Map<Credential>(model), userId);
+                _credService.Update(cred);
                 return Ok();
             }
             catch (AppException e) {
@@ -61,14 +75,38 @@ namespace dotnetapi.Controllers
 
         [HttpDelete]
         public IActionResult Delete([FromBody]CredentialDeleteModel model)
-        {
+        {  
             int userId = int.Parse(User.Identity.Name);
+            Credential cred = _mapper.Map<Credential>(model);
+            cred.UserId = userId;
+            
             try {
-                _service.Delete(_mapper.Map<Credential>(model), userId);
+                _credService.Delete(cred);
                 return Ok();
             }
             catch (AppException e) {
                 return BadRequest(new {Title = e.Message});
+            }
+        }
+
+
+        private static string Encrypt(string textToEncrypt, string publicKeyString)
+        {
+            var bytesToEncrypt = Encoding.UTF8.GetBytes(textToEncrypt);
+
+            using (var rsa = new RSACryptoServiceProvider(2048))
+            {
+                try
+                {               
+                    rsa.FromXmlString(publicKeyString.ToString());
+                    var encryptedData = rsa.Encrypt(bytesToEncrypt, true);
+                    var base64Encrypted = Convert.ToBase64String(encryptedData);
+                    return base64Encrypted;
+                }
+                finally
+                {
+                    rsa.PersistKeyInCsp = false;
+                }
             }
         }
     }
