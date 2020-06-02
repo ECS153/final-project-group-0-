@@ -13,12 +13,12 @@ namespace dotnetapi.Controllers
     [ApiController]
     [Route("[controller]")]
     
-    public class PiController : ControllerBase
+    public class SwapController : ControllerBase
     {
         private ISwapService _swapService;
         private IMapper _mapper;
     
-        public PiController(ISwapService service, IMapper mapper)
+        public SwapController(ISwapService service, IMapper mapper)
         {
             _swapService = service;
             _mapper = mapper;

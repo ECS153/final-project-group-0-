@@ -19,6 +19,7 @@ namespace dotnetapi.Helpers
 
             // Credential Model Maps
             CreateMap<CredentialCreateModel, Credential>();
+            CreateMap<CredentialReadModel, Credential>();
             CreateMap<CredentialUpdateModel, Credential>();
             CreateMap<Credential, CredentialReadModel>();
 

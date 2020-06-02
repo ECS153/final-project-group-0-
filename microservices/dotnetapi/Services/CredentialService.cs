@@ -49,7 +49,7 @@ namespace dotnetapi.Services
           
             var creds = curUser.Credentials.Where(c => ( (cred.Domain == null || (c.Domain == cred.Domain || c.Domain == ""))
                                                       && (cred.Hint == null   || c.Hint == cred.Hint)
-                                                      && (c.Id == cred.Id)
+                                                      && (cred.Id == 0        || c.Id == cred.Id)
                                                       && (cred.Type == null   || c.Type == cred.Type)
                                                       )).AsEnumerable();
             return creds.ToList();

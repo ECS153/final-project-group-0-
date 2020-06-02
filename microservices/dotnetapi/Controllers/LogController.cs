@@ -36,8 +36,6 @@ namespace dotnetapi.Controllers
             catch (AppException e) {
                 return BadRequest(new {Title = e.Message});
             }
-            
-
         }
     } 
 }  
