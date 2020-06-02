@@ -1,9 +1,11 @@
 <template>
   <div id="home">
     
+      
+    <transition name="slide-fade" mode="out-in">
       <refresh-button v-if="requestSwap == null" @click="refresh"></refresh-button>
       <swap-form v-else :swapProps="requestSwap" @submit="requestSwap = null"></swap-form>
-
+    </transition>
   </div>
 </template>
 
@@ -28,7 +30,7 @@ export default {
     refresh: function() {
       this.$http
         .request({
-          url: "http://192.168.1.5:5000/pi/",
+          url: "http://192.168.1.5:5000/swap/",
           method: "get",
           headers: this.$apiHeaders
         })

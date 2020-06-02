@@ -129,7 +129,7 @@ browser.menus.onClicked.addListener(async (info, tab) => {
 			AuthId: eval(new_pin)
 		};
 		var bearer = 'Bearer ' + token;
-		fetch('http://192.168.1.5:5000/browser', {
+		fetch('http://192.168.1.5:5000/swap/new', {
 			method: 'POST',
 			withCredentials: true,
 			credentials: 'include',
@@ -166,7 +166,7 @@ function checkStatus(storedSettings) {
 		sendMsg("login");
 	} else {
 		var noResponse = setTimeout(function () { sendMsg("failure"); }, 3500);
-		var url = "http://192.168.1.5:5000/pi/";
+		var url = "http://192.168.1.5:5000/swap/";
 		token = storedSettings.token;
 		var bearer = 'Bearer ' + token;
 		fetch(url, {

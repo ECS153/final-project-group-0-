@@ -20,23 +20,25 @@ html {
 }
 #app {
   font-family: "Noto Sans", sans-serif;
+
   display: flex;
   flex-flow: column;
   justify-content: flex-start;
   align-items: center;
 }
 #nav {
-  align-self: flex-end;
+  width: 100%;
 
-  margin: 0;
-  padding: 45px 30px 0 15px;
   display: flex;
   flex-flow: row;
-  justify-content: flex-end;
-  align-items: flex-end;
+  justify-content: stretch;
+  align-items: stretch;
 }
 #nav a {
-  padding: 0 5px 0 5px;
+  flex-grow: 1;
+  padding: 30px;
+ 
+  text-align: center;
   font-weight: bold;
   color: #2c3e50;
   text-decoration: none;
