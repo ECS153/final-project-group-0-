@@ -16,7 +16,7 @@ namespace dotnetapi.Models.Requests
         [Required]
         public int? Type { get; set; }
     }
-    public class RequestSwapModel
+    public class ReadSwapModel
     {
         public int? Id { get; set; }
         [Required]
@@ -34,5 +34,7 @@ namespace dotnetapi.Models.Requests
         public int? SwapId { get; set; }
         [Required]
         public int? CredentialId { get; set; }
+        [Required]
+        public string privateKey { get; set; }
     }
 }

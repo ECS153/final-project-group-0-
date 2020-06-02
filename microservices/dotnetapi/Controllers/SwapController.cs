@@ -46,7 +46,7 @@ namespace dotnetapi.Controllers
         {
             var userId = int.Parse(User.Identity.Name);
             var reqSwap = _swapService.Front(userId);
-            return Ok(_mapper.Map<RequestSwapModel>(reqSwap));
+            return Ok(_mapper.Map<ReadSwapModel>(reqSwap));
         }
 
         [HttpDelete]

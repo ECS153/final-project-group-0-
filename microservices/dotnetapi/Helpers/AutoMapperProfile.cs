@@ -25,7 +25,7 @@ namespace dotnetapi.Helpers
 
             // Swap Maps
             CreateMap<SubmitRequestModel, RequestSwap>();
-            CreateMap<RequestSwap, RequestSwapModel>();
+            CreateMap<RequestSwap, ReadSwapModel>();
         }
     }
 }
