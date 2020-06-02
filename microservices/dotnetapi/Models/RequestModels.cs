@@ -31,10 +31,10 @@ namespace dotnetapi.Models.Requests
     public class SubmitSwapModel
     {
         [Required]
-        public int? SwapId { get; set; }
+        public int SwapId { get; set; }
         [Required]
-        public int? CredentialId { get; set; }
+        public int CredentialId { get; set; }
         [Required]
-        public string privateKey { get; set; }
+        public string PrivateKey { get; set; }
     }
 }

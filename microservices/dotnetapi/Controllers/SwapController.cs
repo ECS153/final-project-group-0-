@@ -1,6 +1,9 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Text;
+using System.Security.Cryptography;
 
 using dotnetapi.Entities;
 using dotnetapi.Services;
@@ -16,11 +19,13 @@ namespace dotnetapi.Controllers
     public class SwapController : ControllerBase
     {
         private ISwapService _swapService;
+        private ICredentialService _credService;
         private IMapper _mapper;
     
-        public SwapController(ISwapService service, IMapper mapper)
+        public SwapController(ISwapService swapService, ICredentialService credService, IMapper mapper)
         {
-            _swapService = service;
+            _swapService = swapService;
+            _credService = credService;
             _mapper = mapper;
         }
         
@@ -65,13 +70,57 @@ namespace dotnetapi.Controllers
         [HttpPost]
         public IActionResult Submit([FromBody]SubmitSwapModel model)
         {
+            int userId = int.Parse(User.Identity.Name);
+            RequestSwap reqSwap = _swapService.Front(userId);
+            Credential cred = new Credential();
+            cred.Id = model.CredentialId;
+            cred.UserId = userId;
+            cred.Domain = reqSwap.Domain;
+            cred = _credService.Read(cred)[0];
+
+            if (reqSwap == null) {
+                return BadRequest(new {Title = "User does not have any pending request Swaps"});
+            }
+            if (cred == null) {
+                return BadRequest(new {Title = "User is not allowed to use this credential on this domain"});
+            }
+
+
+            
+            
             try {
-                var userId = int.Parse(User.Identity.Name);
-                _swapService.Swap(model.CredentialId, userId);
+                String valueHash = Decrypt(cred.ValueHash, model.PrivateKey);
+                _swapService.Swap(userId, valueHash);
                 return Ok();
             }
             catch (AppException e) {
                 return BadRequest(new { Title = e.Message });
+            } catch(FormatException e) {
+                return BadRequest(new { Title = e.Message });
+            }
+        }
+
+
+        private static string Decrypt(string textToDecrypt, string privateKeyString)
+        {
+            var bytesToDescrypt = Encoding.UTF8.GetBytes(textToDecrypt);
+
+            using (var rsa = new RSACryptoServiceProvider(2048))
+            {
+                try
+                {
+                    // server decrypting data with private key                    
+                    rsa.FromXmlString(privateKeyString);
+
+                    var resultBytes = Convert.FromBase64String(textToDecrypt);
+                    var decryptedBytes = rsa.Decrypt(resultBytes, true);
+                    var decryptedData = Encoding.UTF8.GetString(decryptedBytes);
+                    return decryptedData.ToString();
+                }
+                finally
+                {
+                    rsa.PersistKeyInCsp = false;
+                }
             }
         }
 

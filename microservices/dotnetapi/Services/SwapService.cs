@@ -6,8 +6,7 @@
 */
 using System;
 using System.Linq;
-using System.Text;
-using System.Security.Cryptography;
+
 
 using dotnetapi.Entities;
 using dotnetapi.Helpers;
@@ -19,7 +18,7 @@ namespace dotnetapi.Services
         void Dequeue(int userId);
         void Enqueue(RequestSwap reqSwap);
         RequestSwap Front(int userId);
-        void Swap(int? credId, int userId);
+        void Swap(int userId, String credVal);
     }
     public class SwapService : ISwapService
     {
@@ -43,7 +42,7 @@ namespace dotnetapi.Services
  
         public void Enqueue(RequestSwap reqSwap)
         {
-            _context.Add(reqSwap);
+            _context.RequestSwaps.Add(reqSwap);
             _context.SaveChanges();
         }
 
@@ -53,21 +52,9 @@ namespace dotnetapi.Services
             return topReq;
         }
 
-        public void Swap(int? credId, int userId)
+        public void Swap(int userId, String credVal)
         {
-            // Verify that the credential is allowed to be used
-            var userCred = _context.Credentials.FirstOrDefault(c => c.Id == credId && c.UserId == userId);
-            if (userCred == null) {
-                throw new AppException("User does not have a credential with this ID");
-            }
-            // Get user's top requestswap
-            var reqSwap = Front(userId);
-            if (reqSwap == null) {
-                throw new AppException("User does not have any pending Request Swaps with this Id");
-            }
-            if (reqSwap.Domain != userCred.Domain && userCred.Domain  != "") {
-                throw new AppException("User is not permitted to use this credential on this domain");
-            }
+            RequestSwap reqSwap = Front(userId);
 
             // Transform RequestSwap into ProxySwap
             var proxySwap = new ProxySwap();
@@ -75,7 +62,7 @@ namespace dotnetapi.Services
             proxySwap.Domain = reqSwap.Domain;
             proxySwap.RandToken = reqSwap.RandToken;
             proxySwap.UserId = reqSwap.UserId;
-            proxySwap.Credential = userCred.ValueHash;
+            proxySwap.Credential = credVal;
  
             // Add to ProxySwap Database, remove from RequestSwap Database
             _context.ProxySwaps.Add(proxySwap);
@@ -83,28 +70,6 @@ namespace dotnetapi.Services
             _context.SaveChanges();
         }
     
-        private static string Decrypt(string textToDecrypt, string privateKeyString)
-        {
-            var bytesToDescrypt = Encoding.UTF8.GetBytes(textToDecrypt);
-
-            using (var rsa = new RSACryptoServiceProvider(2048))
-            {
-                try
-                {
-                    // server decrypting data with private key                    
-                    rsa.FromXmlString(privateKeyString);
-
-                    var resultBytes = Convert.FromBase64String(textToDecrypt);
-                    var decryptedBytes = rsa.Decrypt(resultBytes, true);
-                    var decryptedData = Encoding.UTF8.GetString(decryptedBytes);
-                    return decryptedData.ToString();
-                }
-                finally
-                {
-                    rsa.PersistKeyInCsp = false;
-                }
-            }
-        }
-
+        
     }
 }

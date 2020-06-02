@@ -41,7 +41,7 @@ namespace dotnetapi.Services
             return cred;
         }
 
-        public List<Credential> Read(Credential cred)
+        public List<Credential>Read(Credential cred)
         {
             var creds = _context.Credentials.Where(c => ( (cred.Domain == null || (c.Domain == cred.Domain || c.Domain == ""))
                                                        && (cred.UserId == c.UserId)
@@ -78,7 +78,7 @@ namespace dotnetapi.Services
             if (credential == null) {
                 throw new AppException("None of your credentials have this Id");
             }
-            
+
             _context.Credentials.Remove(credential);
             _context.Credentials.Update(credential);
             _context.SaveChanges();
