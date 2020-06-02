@@ -65,6 +65,8 @@ namespace dotnetapi.Controllers
         {
             try
             {
+                var user = _mapper.Map<User>(model);
+
                 string privateKey = _userService.Create(_mapper.Map<User>(model), model.Password, "User");
                 return Ok(privateKey);
             }
@@ -97,16 +99,6 @@ namespace dotnetapi.Controllers
             catch (AppException ex) {
                 return BadRequest(new { Title = ex.Message });
             }
-        }
-
-
-        private static string GetKeyString(RSAParameters publicKey)
-        {
-
-            var stringWriter = new System.IO.StringWriter();
-            var xmlSerializer = new System.Xml.Serialization.XmlSerializer(typeof(RSAParameters));
-            xmlSerializer.Serialize(stringWriter, publicKey);
-            return stringWriter.ToString();
         }
     }
 }

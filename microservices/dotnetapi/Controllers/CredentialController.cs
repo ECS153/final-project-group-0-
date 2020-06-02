@@ -30,12 +30,11 @@ namespace dotnetapi.Controllers
         }
         
         [HttpPost("new")]
-        public IActionResult Create([FromBody]CredentialCreateModel model) 
+        public IActionResult New([FromBody]CredentialCreateModel model) 
         {
             User user = _userService.Read(int.Parse(User.Identity.Name));   
             Credential cred = _mapper.Map<Credential>(model);
             cred.UserId = user.Id;   
-
             try {
                 cred.ValueHash = Encrypt(model.Value, user.PublicCredKey);
                 _credService.Create(cred);
@@ -53,7 +52,6 @@ namespace dotnetapi.Controllers
             Credential cred = _mapper.Map<Credential>(model);
             cred.UserId = userId;
             var credentials = _mapper.Map<List<CredentialReadModel>>(_credService.Read(cred));
-        
             return Ok(credentials);
         }
 
@@ -63,7 +61,6 @@ namespace dotnetapi.Controllers
             int userId = int.Parse(User.Identity.Name);
             Credential cred = _mapper.Map<Credential>(model);
             cred.UserId = userId;
-
             try {
                 _credService.Update(cred);
                 return Ok();
@@ -79,7 +76,6 @@ namespace dotnetapi.Controllers
             int userId = int.Parse(User.Identity.Name);
             Credential cred = _mapper.Map<Credential>(model);
             cred.UserId = userId;
-            
             try {
                 _credService.Delete(cred);
                 return Ok();
@@ -89,28 +85,22 @@ namespace dotnetapi.Controllers
             }
         }
 
-
         private static string Encrypt(string textToEncrypt, string publicKeyString)
         {
             var bytesToEncrypt = Encoding.UTF8.GetBytes(textToEncrypt);
 
             using (var rsa = new RSACryptoServiceProvider(2048))
             {
-                try
-                {               
+                try {               
                     rsa.FromXmlString(publicKeyString.ToString());
                     var encryptedData = rsa.Encrypt(bytesToEncrypt, true);
                     var base64Encrypted = Convert.ToBase64String(encryptedData);
                     return base64Encrypted;
-                }
-                finally
-                {
+                } finally {
                     rsa.PersistKeyInCsp = false;
                 }
             }
         }
     }
-
-
 }
 

@@ -164,6 +164,7 @@ namespace dotnetapi.Services
             }
             return true;
         }
+
         private static string GetKeyString(RSAParameters publicKey)
         {
             var stringWriter = new System.IO.StringWriter();

@@ -71,23 +71,22 @@ namespace dotnetapi.Controllers
         public IActionResult Submit([FromBody]SubmitSwapModel model)
         {
             int userId = int.Parse(User.Identity.Name);
+
+            // Grab the top request Swap as well as the credential the user wants to use
             RequestSwap reqSwap = _swapService.Front(userId);
+            if (reqSwap == null) {
+                return BadRequest(new {Title = "User does not have any pending request Swaps"});
+            }
+
             Credential cred = new Credential();
             cred.Id = model.CredentialId;
             cred.UserId = userId;
             cred.Domain = reqSwap.Domain;
             cred = _credService.Read(cred)[0];
-
-            if (reqSwap == null) {
-                return BadRequest(new {Title = "User does not have any pending request Swaps"});
-            }
             if (cred == null) {
                 return BadRequest(new {Title = "User is not allowed to use this credential on this domain"});
             }
 
-
-            
-            
             try {
                 String valueHash = Decrypt(cred.ValueHash, model.PrivateKey);
                 _swapService.Swap(userId, valueHash);
@@ -95,6 +94,8 @@ namespace dotnetapi.Controllers
             }
             catch (AppException e) {
                 return BadRequest(new { Title = e.Message });
+
+            // If private key is not correct, this exception will trigger
             } catch(FormatException e) {
                 return BadRequest(new { Title = e.Message });
             }
