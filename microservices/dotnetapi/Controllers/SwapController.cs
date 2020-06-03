@@ -98,6 +98,8 @@ namespace dotnetapi.Controllers
             // If private key is not correct, this exception will trigger
             } catch(FormatException e) {
                 return BadRequest(new { Title = e.Message });
+            } catch(Exception e) {
+                return BadRequest(new {Title = e.Message});
             }
         }
 

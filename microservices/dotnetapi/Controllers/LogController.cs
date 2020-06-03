@@ -25,7 +25,7 @@ namespace dotnetapi.Controllers
             int userId = int.Parse(User.Identity.Name);
             try {
                 List<EventLog> logs = _logService.getLogs(userId);
-                return Ok();
+                return Ok(logs);
             }
             catch (AppException e) {
                 return BadRequest(new {Title = e.Message});
