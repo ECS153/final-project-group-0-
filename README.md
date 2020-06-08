@@ -8,7 +8,7 @@ Our goal is to create a password manager that can keep a user's credentials unto
 
 ## Repository Folder Outline 
 At the root of the repo, we have our a 4 markdown files: 
-  - ReadMe.md: this
+  - ReadMe.md: You're reading it
   - design_docs.md: Contains a detailed explanation of the "microservices" we made, as well as how they interact with each other
   - milestones.md: Contains a summary of our weekly progress on the project
   - proposal.md: Contains our updated proposal for what our
