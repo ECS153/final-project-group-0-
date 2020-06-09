@@ -1,4 +1,4 @@
-# SeCreT
+# SECRET Browser Extension
 
 ## What it does ##
 
