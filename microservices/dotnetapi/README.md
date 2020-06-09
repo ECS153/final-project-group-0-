@@ -166,9 +166,9 @@ public IActionResult Submit([FromBody]SubmitSwapModel model)
 }
 ```
 The `SubmitSwapModel` object contains:
-    - `SwapId`: This is the id of the Request, that the Pi got from step 2
-    - `CredentialId`: This is the id of the credential that the user selected that the Pi knows from step 3 
-    - `PrivateKey`: This is the private key that the API will use to decrypt the credentials 
+- `SwapId`: This is the id of the Request, that the Pi got from step 2
+- `CredentialId`: This is the id of the credential that the user selected that the Pi knows from step 3 
+- `PrivateKey`: This is the private key that the API will use to decrypt the credentials 
 The API will find the credential with it's ID, decrypt it's hashed value using the private key it got from the Pi, and then finally put it in the ProxySwap Database table, which is the only table that our proxy has. 
 
 ### Credential Encryption
