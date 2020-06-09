@@ -11,6 +11,7 @@ We're using https to
 ### User Registration
 One of our goals was to be able to encrypt all of the user's credentials on our server. To accomplish this, we decided to use RSA public key encryption. Upon registration, a user will receive a private key that can decrypt his credentials on the server. The server will delete the private key, but keep the public key so that it can encrypt any new credentials added without requiring unnecessary transport of the private key. In the design decisions section, we discuss our encryption more in depth
 ```c#
+File: /services/UserService.cs
 public String Create(User user, string password, string role)
 {
     if (string.IsNullOrWhiteSpace(password))
@@ -43,8 +44,34 @@ public String Create(User user, string password, string role)
 ```  
 This method gets called when the user visits `url/users/new`. We obviously hash the password and compare against the hash instead of actually storing the password. Then the public/private key pair is created, and the public key is stored on our database, and the private key is sent back to the user. 
 
-
 ### User Login
+
+```c#
+        public IActionResult Authenticate([FromBody]UserAuthenticateModel model)
+        {
+            var user = _userService.Authenticate(model);
+            if (user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            // Issue Auth Token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_AppSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role)
+                }),
+                Expires = DateTime.UtcNow.AddDays(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+            
+            return Ok(new{Token = tokenString});
+        }
+```
 
 ### Creating a New Credential
 
