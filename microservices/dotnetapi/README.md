@@ -2,11 +2,11 @@
 ## Introduction
 This microservice is in charge of syncronizing and managing all of the other microservices. With the exception of handling user logins, it follows the RESTful api design pattern. We decided to use Dotnet Core because we felt that it had robust authentication modules that we could integrate fairly easily.
 
-## Structure
-It's a bit outside the scope of this README (as well as outside our scope) to properly explain the structure of Dotnet Core, though, so instead we'll just focus on the most critical parts of the code. Anytime a ". . ." is added, it's merely just code that we felt wasn't relevant to the explanation. 
-
 ## HTTPS
 We're using https for all communication to and from the api. While we have seen ways attackers can get around HTTPS encryption, most of them time they would involve changing or adding certificates to a user's computer. 
+
+## (Most) Relevant Code Explained
+Looking back at our codebase for the API, there's a lot to explain, and unfortunately I don't think we can explain everything in just this readme alon. Part of the problem is how convoluted dotnet appears to people unfamiliar with it, and part of it is definitely our inexperience with coding big projects. But another part of it is also our ambitions. We kept moving the goalpost by adding support for users, administrators, encrypting credentials, and even logging suspiscious activity. 
 
 ### User Registration
 One of our goals was to be able to encrypt all of the user's credentials on our server. To accomplish this, we decided to use RSA public key encryption. Upon registration, a user will receive a private key that can decrypt his credentials on the server. The server will delete the private key, but keep the public key so that it can encrypt any new credentials added without requiring unnecessary transport of the private key. In the design decisions section, we discuss our encryption more in depth
