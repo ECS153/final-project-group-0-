@@ -6,7 +6,7 @@ This microservice is in charge of syncronizing and managing all of the other mic
 It's a bit outside the scope of this README (as well as outside our scope) to properly explain the structure of Dotnet Core, though, so instead we'll just focus on the most critical parts of the code. Anytime a ". . ." is added, it's merely just code that we felt wasn't relevant to the explanation. The most relevant parts of our code will be found in the `services` subfolder. Everything else is mostly semantics related to Dotnet handling http requests.
 
 ## HTTPS
-We're using https to 
+We're using https for all communication to and from the api. While we have seen ways attackers can get around HTTPS encryption, most of them time they would involve changing or adding certificates to a user's computer. 
 
 ### User Registration
 One of our goals was to be able to encrypt all of the user's credentials on our server. To accomplish this, we decided to use RSA public key encryption. Upon registration, a user will receive a private key that can decrypt his credentials on the server. The server will delete the private key, but keep the public key so that it can encrypt any new credentials added without requiring unnecessary transport of the private key. In the design decisions section, we discuss our encryption more in depth
@@ -73,9 +73,29 @@ public IActionResult Authenticate([FromBody]UserAuthenticateModel model)
     return Ok(new{Token = tokenString});
 }
 ```
-This function handles authentication for both the Raspberry Pi and the Chrome extension. When either of them visit `url/user/authenticate`, it creates and returns a JWT token that is valid for 24 hours, though the expiration date can easily be changed. Our primary concern with handling authentication, was the fact that both the pi and the extension would login with the same credentials. But what if the user's computer that he is running the extension on becomes compromised? How could we prevent malware from stealing the user's password and username and login to our api and "emulate" the pi to bypass the 2 factor authentication? Because only the pi has the private key, even if someone were to attempt this attack, they would only be able to get meaningless garbage since they still would not have the private key.
+This function handles authentication for both the Raspberry Pi and the Chrome extension. When either of them visit `url/user/authenticate`, it creates and returns a JWT token that is valid for 24 hours, though the expiration date can easily be changed. Our primary concern with handling authentication, was the fact that both the pi and the extension would login with the same credentials. But what if the user's computer that he is running the extension on becomes compromised? How could we prevent malware from stealing the user's password and username and login to our api and "emulate" the pi to bypass the 2 factor authentication? Because only the pi has the private key, even if someone were to attempt this attack, they would only be able to get meaningless garbage since they still would not have the private key, and the encrypted credentials would be not decrypted properly.
 
 ### Creating a New Credential
+```c#
+file: controllers/CredentialController.cs
+private static string Encrypt(string textToEncrypt, string publicKeyString)
+{
+    var bytesToEncrypt = Encoding.UTF8.GetBytes(textToEncrypt);
+
+    using (var rsa = new RSACryptoServiceProvider(2048))
+    {
+        try {               
+            rsa.FromXmlString(publicKeyString.ToString());
+            var encryptedData = rsa.Encrypt(bytesToEncrypt, true);
+            var base64Encrypted = Convert.ToBase64String(encryptedData);
+            return base64Encrypted;
+        } finally {
+            rsa.PersistKeyInCsp = false;
+        }
+    }
+}
+```
+Here, we are encrypting the new credential using the public key that was generated when the user created the account. 
 
 ### Requesting to Use a Credential
 
