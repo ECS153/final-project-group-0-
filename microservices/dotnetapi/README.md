@@ -3,7 +3,7 @@
 This microservice is in charge of syncronizing and managing all of the other microservices. With the exception of handling user logins, it follows the RESTful api design pattern. We decided to use Dotnet Core because we felt that it had robust authentication modules that we could integrate fairly easily.
 
 ## Structure
-It's a bit outside the scope of this README (as well as outside our scope) to properly explain the structure of Dotnet Core, though, so instead we'll just focus on the most critical parts of the code. Anytime a ". . ." is added, it's merely just code that we felt wasn't relevant to the explanation. The most relevant parts of our code will be found in the `services` subfolder. Everything else is mostly semantics related to Dotnet handling http requests.
+It's a bit outside the scope of this README (as well as outside our scope) to properly explain the structure of Dotnet Core, though, so instead we'll just focus on the most critical parts of the code. Anytime a ". . ." is added, it's merely just code that we felt wasn't relevant to the explanation. 
 
 ## HTTPS
 We're using https for all communication to and from the api. While we have seen ways attackers can get around HTTPS encryption, most of them time they would involve changing or adding certificates to a user's computer. 
@@ -123,16 +123,54 @@ our `SubmitRequestModel` we already have:
  
 Then we create a RequestSwap Object that contains the userId as well as the UserIp so that we can later ensure that the proxy only swap credentials that came from the same IP as the user's initial request.
 
-#### 2.Raspberry Pi prompts the user to authenticate the request via our GUI, and then grabs all credentials that can be used with the domain that the 
+#### 2.Raspberry Pi prompts the user to authenticate the request via our GUI
+This part is fairly simple, and the code doesn't really show much. Basically, the Pi is polling `url/swaps` and if the return isn't empty then it contains the top of the user's queue'd requests, since the user can make several credential requests at once.
 
+#### 3. The Pi then grabs all credentials that can be used with the domain that was on the Request Swap
+
+
+#### 4. Rasperry Pi submits the request
 ```c#
+public IActionResult Submit([FromBody]SubmitSwapModel model)
+{
+    int userId = int.Parse(User.Identity.Name);
 
+    // Grab the top request Swap as well as the credential the user wants to use
+    RequestSwap reqSwap = _swapService.Front(userId);
+    if (reqSwap == null) {
+        return BadRequest(new {Title = "User does not have any pending request Swaps"});
+    }
 
+    Credential cred = new Credential();
+    cred.Id = model.CredentialId;
+    cred.UserId = userId;
+    cred.Domain = reqSwap.Domain;
+    cred = _credService.Read(cred)[0];
+    if (cred == null) {
+        return BadRequest(new {Title = "User is not allowed to use this credential on this domain"});
+    }
+
+    try {
+        String valueHash = Decrypt(cred.ValueHash, model.PrivateKey);
+        _swapService.Swap(userId, valueHash);
+        return Ok();
+    }
+    catch (AppException e) {
+        return BadRequest(new { Title = e.Message });
+
+    // If private key is not correct, this exception will trigger
+    } catch(FormatException e) {
+        return BadRequest(new { Title = e.Message });
+    } catch(Exception e) {
+        return BadRequest(new {Title = e.Message});
+    }
+}
 ```
-
-#### 3. Rasperry Pi submits the request
-
-
+The `SubmitSwapModel` object contains:
+    -`SwapId`: This is the id of the Request, that the Pi got from step 2
+    -`CredentialId`: This is the id of the credential that the user selected that the Pi knows from step 3 
+    - `PrivateKey`: This is the private key that the API will use to decrypt the credentials 
+The API will find the credential with it's ID, decrypt it's hashed value using the private key it got from the Pi, and then finally put it in the ProxySwap Database table, which is the only table that our proxy has. 
 
 ## Design Decisions
 ### Credential Encryption
