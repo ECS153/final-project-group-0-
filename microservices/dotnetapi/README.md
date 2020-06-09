@@ -47,31 +47,33 @@ This method gets called when the user visits `url/users/new`. We obviously hash 
 ### User Login
 
 ```c#
-        public IActionResult Authenticate([FromBody]UserAuthenticateModel model)
-        {
-            var user = _userService.Authenticate(model);
-            if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+File: /Controllers/UserController.cs
+public IActionResult Authenticate([FromBody]UserAuthenticateModel model)
+{
+    var user = _userService.Authenticate(model);
+    if (user == null)
+        return BadRequest(new { message = "Username or password is incorrect" });
 
-            // Issue Auth Token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_AppSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role)
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-            
-            return Ok(new{Token = tokenString});
-        }
+    // Issue Auth Token
+    var tokenHandler = new JwtSecurityTokenHandler();
+    var key = Encoding.ASCII.GetBytes(_AppSettings.Secret);
+    var tokenDescriptor = new SecurityTokenDescriptor
+    {
+        Subject = new ClaimsIdentity(new Claim[]
+        {
+            new Claim(ClaimTypes.Name, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, user.Role)
+        }),
+        Expires = DateTime.UtcNow.AddDays(1),
+        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+    };
+    var token = tokenHandler.CreateToken(tokenDescriptor);
+    var tokenString = tokenHandler.WriteToken(token);
+
+    return Ok(new{Token = tokenString});
+}
 ```
+This function handles authentication for both the Raspberry Pi and the Chrome extension. When either of them visit `url/user/authenticate`, it creates and returns a JWT token that is valid for 24 hours, though the expiration date can easily be changed. Our primary concern with handling authentication, was the fact that both the pi and the extension would login with the same credentials. But what if the user's computer that he is running the extension on becomes compromised? How could we prevent malware from stealing the user's password and username and login to our api and "emulate" the pi to bypass the 2 factor authentication? Because only the pi has the private key, even if someone were to attempt this attack, they would only be able to get meaningless garbage since they still would not have the private key.
 
 ### Creating a New Credential
 
