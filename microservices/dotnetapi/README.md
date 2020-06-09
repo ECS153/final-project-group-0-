@@ -2,8 +2,13 @@
 ## Introduction
 This microservice is in charge of syncronizing and managing all of the other microservices. With the exception of handling user logins, it follows the RESTful api design pattern. We decided to use Dotnet Core because we felt that it had robust authentication modules that we could integrate fairly easily. We only allow https connections to the api.
 
+
+### Credential Encryption
+As previously mentioned, to encrypt the credentials on the server, we decided to create a public/private key pair where the private key is stored only on the pi. While it's never ideal to transport a private key over any connection, we reasoned that since we only allow connections over https, that this would be sufficient to protect the private key from being seen by attackers.
+
+
 ## (Relevant) Code Explained
-Looking back at our codebase for the API, there's a lot to explain, and unfortunately I don't think we can explain everything in just this readme alone. Part of the problem is how convoluted dotnet appears to people unfamiliar with it, and part of it is definitely our inexperience with coding big projects. But another factor was also our ambitions. We kept moving the goalpost further and further by adding support for users, administrators, encrypting credentials, and even logging suspiscious activity. 
+Looking back at our codebase for the API, there's a lot to explain, and unfortunately I don't think we can explain everything in just this readme alone. Part of the problem is how convoluted dotnet appears to people unfamiliar with it, and part of it is definitely our inexperience with coding big projects. But another factor was also our ambitions. We kept moving the goalpost further and further by adding support for users, administrators, encrypting credentials, and even logging suspiscious activity. So we're only going to outline the most important parts of code that play a role in the SECRET API.
 
 ### User Registration
 One of our goals was to be able to encrypt all of the user's credentials on our server. To accomplish this, we decided to use RSA public key encryption. Upon registration, a user will receive a private key that can decrypt his credentials on the server. The server will delete the private key, but keep the public key so that it can encrypt any new credentials added without requiring unnecessary transport of the private key. In the design decisions section, we discuss our encryption more in depth
@@ -171,5 +176,4 @@ The `SubmitSwapModel` object contains:
 - `PrivateKey`: This is the private key that the API will use to decrypt the credentials 
 The API will find the credential with it's ID, decrypt it's hashed value using the private key it got from the Pi, and then finally put it in the ProxySwap Database table, which is the only table that our proxy has. 
 
-### Credential Encryption
-As previously mentioned, to encrypt the credentials on the server, we decided to create a public/private key pair where the private key is stored only on the pi. While it's never ideal to transport a private key over any connection, we reasoned that since we only allow connections over https, that this would be sufficient to protect the private key from being seen by attackers.
+
