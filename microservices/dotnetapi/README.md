@@ -130,8 +130,8 @@ This part is fairly simple, and the code doesn't really show much. Basically, th
 
 #### 3. The Pi then grabs all credentials that can be used with the domain that was on the Request Swap
 Again, this part is fairly straightforward. The pi makes an http get request on `apiurl/credentials`, with query parameters:
-`Type`: the type of credential it is (password, email, username, or credit card)
-`Domain`: The domain the credential request was from
+ - `Type`: the type of credential it is (password, email, username, or credit card)
+ - `Domain`: The domain the credential request was from
 
 #### 4. Rasperry Pi submits the request
 ```c#
