@@ -11,6 +11,8 @@ Our goal is to create a password manager that can keep a user's credentials unto
 
 
 ## Repository Outline 
+All of our code can be found within our microservices folder. Each subfolder is an independent service that can be successfully launched without any other code outside its folder. Within each subfolder there should be a README that contains information about the relevant parts of the code. 
+
 ### Root Directory
   - Meetings: Quick notes we took while we were in our meetings
   - Microservices: Folder containing all of our microservices.
@@ -18,6 +20,3 @@ Our goal is to create a password manager that can keep a user's credentials unto
   - design_docs.md: Contains a detailed explanation of the "microservices" we made, as well as how they interact with each other
   - milestones.md: Contains a summary of our weekly progress on the project
   - proposal.md: Contains our updated proposal for what our
-  
-### Microservices Folder
-Each folder has a README describing sections of the code, and what it does
