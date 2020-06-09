@@ -1,4 +1,4 @@
-# Redirect to pi
+# SeCreT
 
 ## What it does ##
 
