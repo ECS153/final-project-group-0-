@@ -64,3 +64,4 @@ source ~/.bashrc
 
 sudo apt-get install unixodbc-dev
 
+then the proxy can simply be run with : mitmproxy --script anatomy.py
