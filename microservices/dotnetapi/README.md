@@ -1,11 +1,8 @@
 # SECRET API
 ## Introduction
-This microservice is in charge of syncronizing and managing all of the other microservices. With the exception of handling user logins, it follows the RESTful api design pattern. We decided to use Dotnet Core because we felt that it had robust authentication modules that we could integrate fairly easily.
+This microservice is in charge of syncronizing and managing all of the other microservices. With the exception of handling user logins, it follows the RESTful api design pattern. We decided to use Dotnet Core because we felt that it had robust authentication modules that we could integrate fairly easily. We only allow https connections to the api.
 
-## HTTPS
-We're using https for all communication to and from the api. While we have seen ways attackers can get around HTTPS encryption, most of them time they would involve changing or adding certificates to a user's computer. 
-
-## (Most) Relevant Code Explained
+## (Relevant) Code Explained
 Looking back at our codebase for the API, there's a lot to explain, and unfortunately I don't think we can explain everything in just this readme alone. Part of the problem is how convoluted dotnet appears to people unfamiliar with it, and part of it is definitely our inexperience with coding big projects. But another factor was also our ambitions. We kept moving the goalpost further and further by adding support for users, administrators, encrypting credentials, and even logging suspiscious activity. 
 
 ### User Registration
@@ -42,7 +39,7 @@ public String Create(User user, string password, string role)
     return privateKeyString;
 }
 ```  
-This method gets called when the user visits `url/users/new`. We obviously hash the password and compare against the hash instead of actually storing the password. Then the public/private key pair is created, and the public key is stored on our database, and the private key is sent back to the user. 
+This method gets called when the user visits `apiurl/users/new` (via post request). We obviously hash the password and compare against the hash instead of actually storing the password. Then the public/private key pair is created, and the public key is stored on our database, and the private key is sent back to the user. 
 
 ### User Login
 ```c#
@@ -72,7 +69,7 @@ public IActionResult Authenticate([FromBody]UserAuthenticateModel model)
     return Ok(new{Token = tokenString});
 }
 ```
-This function handles authentication for both the Raspberry Pi and the Chrome extension. When either of them visit `url/user/authenticate`, it creates and returns a JWT token that is valid for 24 hours, though the expiration date can easily be changed. Our primary concern with handling authentication, was the fact that both the pi and the extension would login with the same credentials. But what if the user's computer that he is running the extension on becomes compromised? How could we prevent malware from stealing the user's password and username and login to our api and "emulate" the pi to bypass the 2 factor authentication? Because only the pi has the private key, even if someone were to attempt this attack, they would only be able to get meaningless garbage since they still would not have the private key, and the encrypted credentials would be not decrypted properly.
+This function handles authentication for both the Raspberry Pi and the Chrome extension. When either of them visit `apiurl/user/authenticate` (via post request), it creates and returns a JWT token that is valid for 24 hours, though the expiration date can easily be changed. Our primary concern with handling authentication, was the fact that both the pi and the extension would login with the same credentials. But what if the user's computer that he is running the extension on becomes compromised? How could we prevent malware from stealing the user's password and username and login to our api and "emulate" the pi to bypass the 2 factor authentication? Because only the pi has the private key, even if someone were to attempt this attack, they would only be able to get meaningless garbage since they still would not have the private key, and the encrypted credentials would be not decrypted properly.
 
 ### Creating a New Credential
 ```c#
@@ -124,10 +121,12 @@ our `SubmitRequestModel` we already have:
 Then we create a RequestSwap Object that contains the userId as well as the UserIp so that we can later ensure that the proxy only swap credentials that came from the same IP as the user's initial request.
 
 #### 2.Raspberry Pi prompts the user to authenticate the request via our GUI
-This part is fairly simple, and the code doesn't really show much. Basically, the Pi is polling `url/swaps` and if the return isn't empty then it contains the top of the user's queue'd requests, since the user can make several credential requests at once.
+This part is fairly simple, and the code doesn't really show much. Basically, the Pi makes a http get request on `apiurl/swaps` and if the return isn't empty then it contains the top of the user's queue'd requests, since the user can make several credential requests at once.
 
 #### 3. The Pi then grabs all credentials that can be used with the domain that was on the Request Swap
-
+Again, this part is fairly straightforward. The pi makes an http get request on `apiurl/credentials`, with query parameters:
+`Type`: the type of credential it is (password, email, username, or credit card)
+`Domain`: The domain the credential request was from
 
 #### 4. Rasperry Pi submits the request
 ```c#
@@ -172,6 +171,5 @@ The `SubmitSwapModel` object contains:
     - `PrivateKey`: This is the private key that the API will use to decrypt the credentials 
 The API will find the credential with it's ID, decrypt it's hashed value using the private key it got from the Pi, and then finally put it in the ProxySwap Database table, which is the only table that our proxy has. 
 
-## Design Decisions
 ### Credential Encryption
-exactly why we decided to have the Pi send the private key rather than store the credentials / send them to the server
+As previously mentioned, to encrypt the credentials on the server, we decided to create a public/private key pair where the private key is stored only on the pi. While it's never ideal to transport a private key over any connection, we reasoned that since we only allow connections over https, that this would be sufficient to protect the private key from being seen by attackers.
