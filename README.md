@@ -11,7 +11,7 @@ Our goal is to create a password manager that can keep a user's credentials unto
 
 
 ## Repository Outline 
-All of our code can be found within our microservices folder. Each subfolder is an independent service that can be successfully launched without any other code outside its folder. Within each subfolder there should be a README that contains information about the relevant parts of the code. 
+All of our code can be found within our microservices folder. Each subfolder is an independent service that can be successfully launched without any other code outside its folder. Within each subfolder there should be a README that contains information about the relevant parts of the code, though our core logic is mostly contained in the [SECRET API](https://github.com/ECS153/final-project-group-0-/blob/master/microservices/dotnetapi/README.md)
 
 ### Root Directory
   - Meetings: Quick notes we took while we were in our meetings
