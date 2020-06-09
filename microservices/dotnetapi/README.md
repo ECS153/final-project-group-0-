@@ -3,19 +3,14 @@
 This microservice is in charge of syncronizing and managing all of the other microservices. With the exception of handling user logins, it follows the RESTful api design pattern. We decided to use Dotnet Core because we felt that it had robust authentication modules that we could integrate fairly easily.
 
 ## Structure
-It's a bit outside the scope of this README (as well as outside our scope) to properly explain the structure of Dotnet Core, though, so instead we'll just focus on the most critical parts of the code.
+It's a bit outside the scope of this README (as well as outside our scope) to properly explain the structure of Dotnet Core, though, so instead we'll just focus on the most critical parts of the code. Anytime a ". . ." is added, it's merely just code that we felt wasn't relevant to the explanation.
 
 ### User Registration
 
 ```c#
         public String Create(User user, string password, string role)
         {
-            if (string.IsNullOrWhiteSpace(password))
-                throw new AppException("Password is required");
-
-            if (_context.Users.Any(x => x.Username == user.Username))
-                throw new AppException("Username \"" + user.Username + "\" is already taken");
-
+            . . .
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
             user.Role = role;
