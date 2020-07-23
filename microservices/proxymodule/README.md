@@ -12,6 +12,10 @@ python3 -m pipx ensurepath (so mitmproxy and other pipx installs can be executed
 pipx install mitmproxy
 
 pipx inject mitmproxy pyodbc
+pipx inject mitmproxy tldextract
+pipx inject mitmproxy regex
+
+#### If you ran into errors with previous command, install unixodbc-2.3.7, not 2.3.6, and do (this) [https://askubuntu.com/questions/1183140/installing-unixodbc-on-19-10]
 
 pipx inject mitmproxy requests
 
