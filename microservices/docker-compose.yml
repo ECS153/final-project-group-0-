@@ -1,8 +1,9 @@
 version: '3.5'
 
 services: 
-   sql-server:
-      container_name: secret_sql-server
+   # This container holds the database
+   secret_sql:
+      container_name: secret_sql
       image: mcr.microsoft.com/mssql/server:2019-CU5-ubuntu-18.04
       environment: 
          - PUID=1000
@@ -13,33 +14,41 @@ services:
          - secret-net
       ports:
          - 1433:1433
-     # volumes: 
-        # - /var/opt/mssql:/home/martin/Docker/Appdata/ms-sql/
-        # - ~/Docker/Appdata/secret/sql-server/:/var/opt/mssql #TODO: Fix this later
-   api: 
+      volumes: 
+         - ${docker_dir}/sql/:/var/opt/mssql
+   
+   # This container holds the api
+   secret_api: 
       container_name: secret_api
       build:
          context: dotnetapi/
+      environment: 
+         - PUID=1000
+         - PGID=1000
       networks: 
          - secret-net
       ports:
          - 8000:80
 
-   proxy:
+   # This container holds mitm-proxy and our python script
+   secret_proxy:
       container_name: secret_proxy
       build:
          context: proxymodule/
+      environment: 
+         - PUID=1000
+         - PGID=1000
       networks: 
          - secret-net
-      entrypoint: '/bin/sh -c "/root/.local/bin/mitmproxy -p8080 -s /home/mitmproxy/.mitmproxy/anatomy.py"'
-      #entrypoint: 'proxymodule/./entrypoint.sh'
       ports: 
          - 8080:8080 
       stdin_open: true # docker run -i
       tty: true # docker run -t
       volumes: 
-         - ~/Docker/Appdata/secret/proxymodule/:/home/mitmproxy/.mitmproxy
+         - ${docker_dir}/proxy/:/home/mitmproxy/.mitmproxy
 
+# By creating a vlan for all of the microservices, we can reference each one by it's
+# container name instead of IP address in all of our code
 networks:
    secret-net:
       driver: bridge

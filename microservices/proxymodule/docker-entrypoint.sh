@@ -1,7 +1,4 @@
 #!/bin/bash
-#ECHO "HELLO"
 
-#exec stty rows 24 cols 80
-exec /root/.local/bin/mitmdump -p8080
-
-#/bin/sh -c "stty rows 24 cols 80 && /root/.local/bin/mitmproxy -p8080"
+# Rune mitmdump instead of mitmproxy since it doesn't require a tty
+exec /root/.local/bin/mitmdump -p8080 -s /home/mitmproxy/.mitmproxy/anatomy.py

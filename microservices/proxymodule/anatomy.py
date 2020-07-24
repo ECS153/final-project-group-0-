@@ -5,21 +5,21 @@ from datetime import timedelta
 import regex
 import tldextract
 import pyodbc
+import sqlserverport
 
 # DATABASE VARIABLES
 ctx.log.info("helo0")
 
-server = 'localhost'
+server = 'tcp:secret_sql'
+
+
+
 database = 'secret'
-username = 'sa'
+username = 'SA'
 password = 'Anac0nda'
 cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-try:
-   cursor = cnxn.cursor()
-except e:
-    if e.__class__ == pyodbc.ProgrammingError:        
-        conn == reinit()
-        cursor = conn.cursor()
+
+cursor = cnxn.cursor()
 
 def checkExpiration(ip, domain):
    cursor.execute("SELECT ExpiresAt FROM ProxySwaps WHERE Ip=? AND Domain=? AND ExpiresAt IS NOT NULL", ip, domain)
