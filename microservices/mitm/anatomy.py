@@ -5,15 +5,9 @@ from datetime import timedelta
 import regex
 import tldextract
 import pyodbc
-import sqlserverport
 
 # DATABASE VARIABLES
-ctx.log.info("helo0")
-
-server = 'tcp:secret_sql'
-
-
-
+server = 'tcp:secret_mssql'
 database = 'secret'
 username = 'SA'
 password = 'Anac0nda'
@@ -24,10 +18,9 @@ cursor = cnxn.cursor()
 def checkExpiration(ip, domain):
    cursor.execute("SELECT ExpiresAt FROM ProxySwaps WHERE Ip=? AND Domain=? AND ExpiresAt IS NOT NULL", ip, domain)
    rows = cursor.fetchall()
-#   ctx.log.info(rows[0])
+
    now = datetime.now()
    for row in rows:
-    #  ctx.log.info(row[0] + "\n")
       expiration = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S.%f')
       if (now >= expiration):
          cursor.execute("Delete FROM ProxySwaps WHERE Ip=? AND Domain=? AND ExpiresAt=?", ip, domain, row[0])

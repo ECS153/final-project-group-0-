@@ -38,8 +38,7 @@ RUN pipx install mitmproxy \
 RUN pipx inject mitmproxy pyodbc \
  && pipx inject mitmproxy tldextract \
  && pipx inject mitmproxy regex \
- && pipx inject mitmproxy requests \ 
- && pipx inject mitmproxy sqlserverport 
+ && pipx inject mitmproxy requests
 
 VOLUME /home/mitmproxy/.mitmproxy
 

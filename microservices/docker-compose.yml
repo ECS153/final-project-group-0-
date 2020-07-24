@@ -2,8 +2,8 @@ version: '3.5'
 
 services: 
    # This container holds the database
-   secret_sql:
-      container_name: secret_sql
+   secret_mssql:
+      container_name: secret_mssql
       image: mcr.microsoft.com/mssql/server:2019-CU5-ubuntu-18.04
       environment: 
          - PUID=1000
@@ -11,44 +11,44 @@ services:
          - ACCEPT_EULA=Y
          - SA_PASSWORD=Anac0nda
       networks:
-         - secret-net
+         - secret_net
       ports:
          - 1433:1433
       volumes: 
          - ${docker_dir}/sql/:/var/opt/mssql
    
    # This container holds the api
-   secret_api: 
-      container_name: secret_api
+   secret_user_api: 
+      container_name: secret_user_api
       build:
-         context: dotnetapi/
+         context: user_api/
       environment: 
          - PUID=1000
          - PGID=1000
       networks: 
-         - secret-net
+         - secret_net
       ports:
          - 8000:80
 
    # This container holds mitm-proxy and our python script
-   secret_proxy:
-      container_name: secret_proxy
+   secret_mitm:
+      container_name: secret_mitm
       build:
-         context: proxymodule/
+         context: mitm/
       environment: 
          - PUID=1000
          - PGID=1000
       networks: 
-         - secret-net
+         - secret_net
       ports: 
          - 8080:8080 
       stdin_open: true # docker run -i
       tty: true # docker run -t
       volumes: 
-         - ${docker_dir}/proxy/:/home/mitmproxy/.mitmproxy
+         - ${docker_dir}/mitm/:/home/mitmproxy/.mitmproxy
 
 # By creating a vlan for all of the microservices, we can reference each one by it's
 # container name instead of IP address in all of our code
 networks:
-   secret-net:
+   secret_net:
       driver: bridge
