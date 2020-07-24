@@ -25,7 +25,7 @@ export default {
     refresh: function() {
       this.$http
         .request({
-          url: "http://192.168.1.5:5000/logs/",
+          url: "http://localhost:8000/logs/",
           method: "get",
           headers: this.$apiHeaders
         })

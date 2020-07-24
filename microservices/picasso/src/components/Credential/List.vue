@@ -93,7 +93,7 @@ export default {
   created: function() {
     this.$http
       .request({
-        url: "http://192.168.1.5:5000/credential",
+        url: "http://localhost:8000/credential",
         method: "get",
         headers: this.$apiHeaders
       })

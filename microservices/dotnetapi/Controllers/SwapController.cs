@@ -39,7 +39,9 @@ namespace dotnetapi.Controllers
             var ReqSwap = _mapper.Map<RequestSwap>(model);
             
             ReqSwap.UserId = userId; 
-            ReqSwap.Ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            //ReqSwap.Ip = "192.168.1.3";
+            ReqSwap.Ip = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+            Console.Write(ReqSwap.Ip);
             
             _swapService.Enqueue(ReqSwap);
             

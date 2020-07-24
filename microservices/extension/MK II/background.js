@@ -129,7 +129,7 @@ browser.menus.onClicked.addListener(async (info, tab) => {
 			AuthId: eval(new_pin)
 		};
 		var bearer = 'Bearer ' + token;
-		fetch('http://192.168.1.5:5000/swap/new', {
+		fetch('http://192.168.1.3:8000/swap/new', {
 			method: 'POST',
 			withCredentials: true,
 			credentials: 'include',
@@ -166,7 +166,7 @@ function checkStatus(storedSettings) {
 		sendMsg("login");
 	} else {
 		var noResponse = setTimeout(function () { sendMsg("failure"); }, 3500);
-		var url = "http://192.168.1.5:5000/swap/";
+		var url = "http://192.168.1.3:8000/swap/";
 		token = storedSettings.token;
 		var bearer = 'Bearer ' + token;
 		fetch(url, {
@@ -201,7 +201,7 @@ function checkPin(storedSettings) {
 
 function login(info) {
 	var noResponse = setTimeout(function () { sendMsg("failure"); }, 3500);
-	fetch('http://192.168.1.5:5000/user/authenticate', {
+	fetch('http://192.168.1.3:8000/user/authenticate', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -440,7 +440,7 @@ function handleProxyRequest(requestInfo) {
 	if (requestInfo.method == "POST" && url.hostname != "192.168.1.5") {
 		// Write details of the proxied host to the console and return the proxy address
 		console.log(`Proxying: ${url.hostname}`);
-		return { type: "http", host: "192.168.1.24", port: 8080 };
+		return { type: "http", host: "192.168.1.3", port: 8080 };
 	}
 	// Return instructions to open the requested webpage
 	return { type: "direct" };

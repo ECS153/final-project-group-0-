@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AzqssF1M3k82t2o/dC9NApFBzoS9mbIiKn9SMilaisba57cIOA99/ukdvSNPZVMmuuLU+6ZBU0VvKYoyX0V/bg==",
+  "dgSpecHash": "A1qQQ8vTT+371kw6cW76vacW8xdVqnksLHoWZuQRhJYmQNrJzo9VKlw4Ii6QST3PgfFfosrJxA8xxnr6QPajrA==",
   "success": true,
-  "projectFilePath": "/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/dotnetapi.csproj",
+  "projectFilePath": "/home/martin/Documents/github/final-project-group-0-/microservices/dotnetapi/dotnetapi.csproj",
   "expectedPackageFiles": [
     "/home/martin/.nuget/packages/automapper/9.0.0/automapper.9.0.0.nupkg.sha512",
     "/home/martin/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/7.0.0/automapper.extensions.microsoft.dependencyinjection.7.0.0.nupkg.sha512",

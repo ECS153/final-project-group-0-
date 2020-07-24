@@ -48,7 +48,7 @@ export default {
     submit: function() {
       this.$http
         .request({
-          url: "http://192.168.1.5:5000/credential/new",
+          url: "http://localhost:8000/credential/new",
           method: "post",
           headers: this.$apiHeaders,
           data: {

@@ -8535,11 +8535,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/dotnetapi.csproj",
+      "projectUniqueName": "/home/martin/Documents/github/final-project-group-0-/microservices/dotnetapi/dotnetapi.csproj",
       "projectName": "dotnetapi",
-      "projectPath": "/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/dotnetapi.csproj",
+      "projectPath": "/home/martin/Documents/github/final-project-group-0-/microservices/dotnetapi/dotnetapi.csproj",
       "packagesPath": "/home/martin/.nuget/packages/",
-      "outputPath": "/home/martin/Documents/Github/School/153/final-project-group-0-/microservices/dotnetapi/obj/",
+      "outputPath": "/home/martin/Documents/github/final-project-group-0-/microservices/dotnetapi/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/martin/.nuget/NuGet/NuGet.Config"
@@ -8621,7 +8621,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.201/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.301/RuntimeIdentifierGraph.json"
       }
     }
   }

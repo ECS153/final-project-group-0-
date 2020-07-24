@@ -30,7 +30,7 @@ export default {
     refresh: function() {
       this.$http
         .request({
-          url: "http://192.168.1.5:5000/swap/",
+          url: "http://localhost:8000/swap/",
           method: "get",
           headers: this.$apiHeaders
         })
